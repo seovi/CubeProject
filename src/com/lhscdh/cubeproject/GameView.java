@@ -49,6 +49,7 @@ public class GameView extends SurfaceView implements Callback {
 
 	static int mFigureGoalNum;
 	static int mScore = 0;
+	static boolean mIsScored = false;
 
 	static int mFigureIndex = 0;
 
@@ -184,9 +185,8 @@ public class GameView extends SurfaceView implements Callback {
 	class GameThread extends Thread {
 		boolean canRun = true; // Thread 제어용
 		boolean isWait = false; // Thread 제어용
-		boolean mRunning = true;
+		boolean mRunning = true;		
 		
-		boolean isScored = false;
 		int circleColorTime = 0;
 		
 		int loop;
@@ -207,14 +207,15 @@ public class GameView extends SurfaceView implements Callback {
 			
 			for (Cube tmp : mCube) {
 				
-				if(tmp.y == 520 * density &&
+				if(tmp.y == 475 * density &&
 						mFigureList.get(0) != mBelowFigureNum) {
 					status = GAMEOVER;
 				}
-				else if (tmp.y == 520 * density &&
+				else if (tmp.y == 475 * density &&
 						mFigureList.get(0) == mBelowFigureNum) {
 				
 					mScore = mScore + 1;
+					mIsScored = true;
 					mFigureList.remove(0);
 					tmp.isDead = true;
 				}				
@@ -224,7 +225,7 @@ public class GameView extends SurfaceView implements Callback {
 
 		int pastNum = -1;
 
-		public void DrawCube() {
+		public void DrawCube(Canvas canvas) {
 			Random random = new Random();
 
 			if (loop == 90) {
@@ -246,12 +247,12 @@ public class GameView extends SurfaceView implements Callback {
 				mFigureIndex++;
 				loop = 0;
 			}
+			
+			for (Cube tmp : mCube) {
+				canvas.drawBitmap(tmp.img, tmp.x, tmp.y, null);
+			}			
 		}
-
-		public void DrawFigure() { // 밑에 보여지는 도형
-
-		}
-
+		
 		public void MoveAll() {
 			loop++;			
 			
@@ -264,50 +265,73 @@ public class GameView extends SurfaceView implements Callback {
 				}
 			}
 		}
-
-		public void DrawAll(Canvas canvas) {
+		
+		public void DrawBackGround(Canvas canvas) {
 			paint.setColor(Color.WHITE);
-
 			canvas.drawRect(0, 0, Width, Height, paint);
-
+			
+			paint.setColor(Color.BLACK);
+			canvas.drawLine(0, 90 * density, Width, 90 * density, paint);
+			
+			canvas.drawLine((int) (100 * density), (int) (90 * density),
+					(int) (100 * density), Height - 350, paint);
+			
+			canvas.drawLine(Width - 100 * density, (int) (90 * density), Width
+					- 100 * density, Height - 350, paint);
+			
+			canvas.drawLine(0, Height - 350, 100 * density, Height - 350, paint);
+			
+			canvas.drawLine(Width - 100 * density, Height - 350, Width, Height - 350, paint);
+			
+			canvas.drawLine(0, Height - 150, Width, Height - 150, paint);
+		}
+		
+		public void DrawScore(Canvas canvas) {			
 			paint.setColor(Color.BLUE);
 			paint.setTextSize(50 * density);
 			mTextWidth = (int) Math.ceil(paint.measureText(Integer
 					.toString(mScore)));
 			canvas.drawText(Integer.toString(mScore), (Width - mTextWidth) / 2,
 					60 * density, paint);
-
-			paint.setColor(Color.BLACK);
-			canvas.drawLine(0, 90 * density, Width, 90 * density, paint);
-
-			for (Cube tmp : mCube) {
-				canvas.drawBitmap(tmp.img, tmp.x, tmp.y, null);
-			}
-			canvas.drawLine((int) (100 * density), (int) (90 * density),
-					(int) (100 * density), Height, paint);
-			canvas.drawLine(Width - 100 * density, (int) (90 * density), Width
-					- 100 * density, Height, paint);
+		
+		}
+		
+		public void DrawBottomCircle(Canvas canvas) {
 			
 			Paint circle = new Paint();
 			circle.setAntiAlias(true);
 			circle.setStyle(Paint.Style.STROKE);
 			circle.setStrokeWidth(3);
-
-			if(isScored) {
+			
+			if(mIsScored) {
 				circle.setColor(Color.LTGRAY);	
-				if(circleColorTime > 100) {
+				if(circleColorTime > 10) {
 					Log.v(TAG, Integer.toString(circleColorTime));
 					circleColorTime = 0;
-					isScored = false;					
+					mIsScored = false;					
 				}
 				circleColorTime++;
 			}
 			
-			canvas.drawCircle(Width / 2, (550 * density), (50 * density),
+			canvas.drawCircle(Width / 2, (510 * density), (40 * density),
 					circle);
+		
+		}
+		
+		public void DrawBottomFigure(Canvas canvas) {
+			
 			canvas.drawBitmap(mFigure[mBelowFigureNum],
 					(Width - mFigure[mBelowFigureNum].getWidth()) / 2,
-					(int) (520 * density), null);
+					(int) (480 * density), null);		
+		}
+
+		public void DrawAll(Canvas canvas) {					
+
+			DrawBackGround(canvas);
+			DrawScore(canvas);
+			DrawCube(canvas);
+			DrawBottomCircle(canvas);
+			DrawBottomFigure(canvas);		
 		}
 
 		// -------------------------------------
@@ -327,8 +351,7 @@ public class GameView extends SurfaceView implements Callback {
 							// doTimerTask();
 							// }
 							MoveAll();
-							CheckCube();
-							DrawCube();							
+							CheckCube();										
 							DrawAll(canvas);
 							break;
 						case STAGE_CLEAR:
