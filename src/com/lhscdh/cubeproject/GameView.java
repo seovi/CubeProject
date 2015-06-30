@@ -169,7 +169,7 @@ public class GameView extends SurfaceView implements Callback {
 	}
 
 	public void GameOver() {
-		// StopGame();
+		
 		Intent intent = new Intent();
 		intent.setAction("GAMEOVER");
 		mContext.sendBroadcast(intent);
