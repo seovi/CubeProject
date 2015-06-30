@@ -39,26 +39,10 @@ public class Cube {
 		//
 
 	}
-
-	//GameTread의 CheckCube()가 하는게 맞지 않나? 
-	public boolean Move() {
+ 
+	public void Move() {
 		y = y + (int)(1 * GameView.density);
-
-		if (y == 520 * GameView.density
-				&& GameView.mFigureList.get(0) != GameView.mBelowFigureNum) {
-			// GameView.mFigureList.remove(0);
-			GameView.status = GameView.GAMEOVER;
-			isDead = true;
-			
-			return false;
-		} else if (y == 520 * GameView.density
-				&& GameView.mFigureList.get(0) == GameView.mBelowFigureNum) {
-			GameView.mScore = GameView.mScore + 1;
-			GameView.mFigureList.remove(0);
-			GameView.mCube.remove(0);
-			
-			return true;
-		}		
+	
 	}
 
 }

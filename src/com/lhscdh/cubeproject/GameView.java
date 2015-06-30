@@ -203,17 +203,22 @@ public class GameView extends SurfaceView implements Callback {
 		}
 
 		public void CheckCube() {
+			Log.v(TAG, "CeckCube");
+			
 			for (Cube tmp : mCube) {
 				
-				Log.v(TAG, "CeckCube");
-				if (mFigureList.size() > 0
-						&& mFigureList.get(0) == mBelowFigureNum
-						&& tmp.y > 520 * density) {
-					mScore = mScore + 100;
-					// tmp.isDead = true;
-					mFigureList.remove(0);
-					break;
+				if(tmp.y == 520 * density &&
+						mFigureList.get(0) != mBelowFigureNum) {
+					status = GAMEOVER;
 				}
+				else if (tmp.y == 520 * density &&
+						mFigureList.get(0) == mBelowFigureNum) {
+				
+					mScore = mScore + 1;
+					mFigureList.remove(0);
+					tmp.isDead = true;
+				}				
+				
 			}
 		}
 
@@ -252,12 +257,7 @@ public class GameView extends SurfaceView implements Callback {
 			
 			for (int i = mCube.size() - 1; i >= 0; i--) {
 				
-				if(i == 0) {
-					isScored = mCube.get(i).Move();
-				}
-				else {
-					mCube.get(i).Move();
-				}
+					mCube.get(i).Move();				
 				
 				if (mCube.get(i).isDead == true) {
 					mCube.remove(i);
@@ -326,9 +326,9 @@ public class GameView extends SurfaceView implements Callback {
 							// mRunning = true;
 							// doTimerTask();
 							// }
-							// CheckCube();
-							DrawCube();
 							MoveAll();
+							CheckCube();
+							DrawCube();							
 							DrawAll(canvas);
 							break;
 						case STAGE_CLEAR:
