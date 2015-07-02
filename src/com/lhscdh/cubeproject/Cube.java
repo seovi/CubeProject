@@ -27,21 +27,13 @@ public class Cube {
 			img = GameView.mFigure[2];
 		else if (figureNum == 3)
 			img = GameView.mFigure[3];
-		// else if (number == 4)
-		// img = BitmapFactory.decodeResource(
-		// GameView.mContext.getResources(), R.drawable.diamond);
-		// else if (number == 5)
-		// img = BitmapFactory.decodeResource(
-		// GameView.mContext.getResources(), R.drawable.smile);
-		// else if (number == 6)
-		// img = BitmapFactory.decodeResource(
-		// GameView.mContext.getResources(), R.drawable.hexagon);
-		
+		else if (figureNum == 4)
+			img = GameView.mFigure[4];
 
 	}
  
 	public void Move() {
-		y = y + (int)(1 * GameView.density);
+		y = y + (int)(2 * GameView.density);
 	
 	}
 

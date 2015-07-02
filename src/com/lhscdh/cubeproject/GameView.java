@@ -53,13 +53,13 @@ public class GameView extends SurfaceView implements Callback {
 
     static float density;
 
-    static int mFigureTotalNum = 4;
+    static int mFigureTotalNum = 5;
 
     int mUpFigureNum;
 
-    static int mBelowFigureNum = 0;
-    static int mBelowFigureLeftNum = mFigureTotalNum - 1;
-    static int mBelowFigureRightNum = 1;
+    static int mBelowFigureNum = 1;
+    static int mBelowFigureLeftNum = 0;
+    static int mBelowFigureRightNum = 2;
 
     static int mFigureGoalNum;
 
@@ -101,11 +101,11 @@ public class GameView extends SurfaceView implements Callback {
         mFigure[1] = BitmapFactory.decodeResource(getResources(), R.drawable.triangle);
         mFigure[2] = BitmapFactory.decodeResource(getResources(), R.drawable.love);
         mFigure[3] = BitmapFactory.decodeResource(getResources(), R.drawable.square);
-
+        mFigure[4] = BitmapFactory.decodeResource(getResources(), R.drawable.diamond);
+        
         mPause = BitmapFactory.decodeResource(getResources(), R.drawable.pause);
         mPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
-        // mFigure[4] = BitmapFactory.decodeResource(getResources(),
-        // R.drawable.diamond);
+        
         // mFigure[5] = BitmapFactory.decodeResource(getResources(),
         // R.drawable.smile);
         // mFigure[6] = BitmapFactory.decodeResource(getResources(),
@@ -214,9 +214,9 @@ public class GameView extends SurfaceView implements Callback {
 
             for (Cube tmp : mCube) {
 
-                if (tmp.y == 475 * density && mFigureList.get(0) != mBelowFigureNum) {
+                if (tmp.y >= 475 * density && mFigureList.get(0) != mBelowFigureNum) {
                     status = GAMEOVER;
-                } else if (tmp.y == 475 * density && mFigureList.get(0) == mBelowFigureNum) {
+                } else if (tmp.y >= 475 * density && mFigureList.get(0) == mBelowFigureNum) {
 
                     mScore = mScore + 1;
                     mIsScored = true;
@@ -232,7 +232,7 @@ public class GameView extends SurfaceView implements Callback {
         public void DrawCube(Canvas canvas) {
             Random random = new Random();
 
-            if (loop == 90) {
+            if (loop == 70) {
                 while (true) {
 
                     mUpFigureNum = random.nextInt(mFigureTotalNum);
