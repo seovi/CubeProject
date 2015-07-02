@@ -36,7 +36,7 @@ public class Cube {
 		// else if (number == 6)
 		// img = BitmapFactory.decodeResource(
 		// GameView.mContext.getResources(), R.drawable.hexagon);
-		//
+		
 
 	}
  
