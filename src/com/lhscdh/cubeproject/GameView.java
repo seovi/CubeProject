@@ -58,6 +58,8 @@ public class GameView extends SurfaceView implements Callback {
     int mUpFigureNum;
 
     static int mBelowFigureNum = 0;
+    static int mBelowFigureLeftNum = mFigureTotalNum - 1;
+    static int mBelowFigureRightNum = 1;
 
     static int mFigureGoalNum;
 
@@ -319,9 +321,15 @@ public class GameView extends SurfaceView implements Callback {
         }
 
         public void DrawBottomFigure(Canvas canvas) {
+        	
+        	canvas.drawBitmap(mFigure[mBelowFigureLeftNum], (Width - 150 - (mFigure[mBelowFigureLeftNum].getWidth()) / 2),
+                    (int) (480 * density), null);
 
             canvas.drawBitmap(mFigure[mBelowFigureNum], (Width - mFigure[mBelowFigureNum].getWidth()) / 2,
-                (int) (480 * density), null);
+                (int) (480 * density), null);            
+           
+            canvas.drawBitmap(mFigure[mBelowFigureRightNum], ((mFigure[mBelowFigureRightNum].getWidth()) / 2),
+                    (int) (480 * density), null);
         }
 
         public void DrawAll(Canvas canvas) {
@@ -408,16 +416,38 @@ public class GameView extends SurfaceView implements Callback {
 
     public boolean TouchEvent(int x, int y) {
         if (rectPrev.contains(x, y)) {
-            if (mBelowFigureNum == 0)
+        	
+        	if (mBelowFigureNum == 0)
                 mBelowFigureNum = mFigureTotalNum - 1;
             else
                 mBelowFigureNum--;
+        	        	
+        	mBelowFigureLeftNum = mBelowFigureNum - 1;        	
+        	mBelowFigureRightNum = mBelowFigureNum + 1;
+        	        	
+        	if (mBelowFigureLeftNum < 0)
+        		mBelowFigureLeftNum = mFigureTotalNum - 1;
+        	
+        	if (mBelowFigureRightNum > mFigureTotalNum - 1)
+        		mBelowFigureRightNum = 0;       	
+            
         }
         if (rectNext.contains(x, y)) {
-            if (mBelowFigureNum == mFigureTotalNum - 1)
-                mBelowFigureNum = 0;
-            else
-                mBelowFigureNum++;
+        	
+        	 if (mBelowFigureNum == mFigureTotalNum - 1)
+                 mBelowFigureNum = 0;
+             else
+                 mBelowFigureNum++;
+                  	
+        	mBelowFigureLeftNum = mBelowFigureNum - 1;        	
+        	mBelowFigureRightNum = mBelowFigureNum + 1;
+        	
+        	if (mBelowFigureLeftNum < 0)
+        		mBelowFigureLeftNum = mFigureTotalNum - 1;
+        	
+        	if (mBelowFigureRightNum > mFigureTotalNum - 1)
+        		mBelowFigureRightNum = 0;   
+        	
         }
         if (rectPause.contains(x, y) || rectPlay.contains(x, y)) {
             if (status == PROCESS)
