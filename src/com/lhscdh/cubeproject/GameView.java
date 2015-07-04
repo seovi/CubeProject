@@ -97,20 +97,15 @@ public class GameView extends SurfaceView implements Callback {
 
         mCube = new ArrayList<Cube>();
         mFigure = new Bitmap[mFigureTotalNum];
-        mFigure[0] = BitmapFactory.decodeResource(getResources(), R.drawable.circle);
-        mFigure[1] = BitmapFactory.decodeResource(getResources(), R.drawable.triangle);
-        mFigure[2] = BitmapFactory.decodeResource(getResources(), R.drawable.love);
-        mFigure[3] = BitmapFactory.decodeResource(getResources(), R.drawable.square);
-        mFigure[4] = BitmapFactory.decodeResource(getResources(), R.drawable.diamond);
+        mFigure[0] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.circle), 100, 100, true);
+        mFigure[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.love), 100, 100, true);
+        mFigure[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.triangle), 100, 100, true);        
+        mFigure[3] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.diamond), 100, 100, true);
+        mFigure[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pentagon), 100, 100, true);
         
         mPause = BitmapFactory.decodeResource(getResources(), R.drawable.pause);
-        mPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);
-        
-        // mFigure[5] = BitmapFactory.decodeResource(getResources(),
-        // R.drawable.smile);
-        // mFigure[6] = BitmapFactory.decodeResource(getResources(),
-        // R.drawable.hexagon);
-
+        mPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);        
+       
         mFigureList = new ArrayList<Integer>();
 
     }
@@ -122,9 +117,9 @@ public class GameView extends SurfaceView implements Callback {
     // canvas.drawBitmap(mPause, Width - 100 * density, 10 * density, null);
     public void InitTouchCor() { // init touch coordinate
 
-        rectPrev = new Rect(0, (int) (90 * density), (int) (100 * density), Height);
+        rectPrev = new Rect(0, (int) (90 * density), (int) (120 * density), Height - 350);
 
-        rectNext = new Rect((int) (Width - 100 * density), (int) (90 * density), Width, Height);
+        rectNext = new Rect((int) (Width - 120 * density), (int) (90 * density), Width, Height - 350);
 
         rectPause =
             new Rect((int) (Width - 100 * density), (int) (10 * density),
@@ -272,19 +267,18 @@ public class GameView extends SurfaceView implements Callback {
             paint.setColor(Color.WHITE);
             canvas.drawRect(0, 0, Width, Height, paint);
 
-            paint.setColor(Color.BLACK);
-
-            //            canvas.drawRect(rectPlay, paint);
-            //            
+            paint.setColor(Color.GRAY);
+            paint.setStrokeWidth(4.0f);
+         
             canvas.drawLine(0, 90 * density, Width, 90 * density, paint);
 
-            canvas.drawLine((int) (100 * density), (int) (90 * density), (int) (100 * density), Height - 350, paint);
+            canvas.drawLine((int) (120 * density), (int) (90 * density), (int) (120 * density), Height - 350, paint);
 
-            canvas.drawLine(Width - 100 * density, (int) (90 * density), Width - 100 * density, Height - 350, paint);
+            canvas.drawLine(Width - 120 * density, (int) (90 * density), Width - 120 * density, Height - 350, paint);
 
-            canvas.drawLine(0, Height - 350, 100 * density, Height - 350, paint);
+            canvas.drawLine(0, Height - 350, 120 * density, Height - 350, paint);
 
-            canvas.drawLine(Width - 100 * density, Height - 350, Width, Height - 350, paint);
+            canvas.drawLine(Width - 120 * density, Height - 350, Width, Height - 350, paint);
 
             canvas.drawLine(0, Height - 150, Width, Height - 150, paint);
 
@@ -304,10 +298,11 @@ public class GameView extends SurfaceView implements Callback {
             Paint circle = new Paint();
             circle.setAntiAlias(true);
             circle.setStyle(Paint.Style.STROKE);
-            circle.setStrokeWidth(3);
+            circle.setStrokeWidth(4);
+            circle.setColor(Color.GRAY);
 
             if (mIsScored) {
-                circle.setColor(Color.LTGRAY);
+                circle.setColor(Color.MAGENTA);
                 if (circleColorTime > 10) {
                     Log.v(TAG, Integer.toString(circleColorTime));
                     circleColorTime = 0;
@@ -316,20 +311,18 @@ public class GameView extends SurfaceView implements Callback {
                 circleColorTime++;
             }
 
-            canvas.drawCircle(Width / 2, (510 * density), (40 * density), circle);
+            canvas.drawCircle(Width / 2, (480 * density) +  mFigure[mBelowFigureNum].getWidth() / 2, (40 * density), circle);
 
         }
 
         public void DrawBottomFigure(Canvas canvas) {
         	
-        	canvas.drawBitmap(mFigure[mBelowFigureLeftNum], (Width - 150 - (mFigure[mBelowFigureLeftNum].getWidth()) / 2),
-                    (int) (480 * density), null);
+        	canvas.drawBitmap(mFigure[mBelowFigureLeftNum], 50, (int) (480 * density), null);
 
             canvas.drawBitmap(mFigure[mBelowFigureNum], (Width - mFigure[mBelowFigureNum].getWidth()) / 2,
                 (int) (480 * density), null);            
            
-            canvas.drawBitmap(mFigure[mBelowFigureRightNum], ((mFigure[mBelowFigureRightNum].getWidth()) / 2),
-                    (int) (480 * density), null);
+            canvas.drawBitmap(mFigure[mBelowFigureRightNum], Width - 150, (int) (480 * density), null);
         }
 
         public void DrawAll(Canvas canvas) {
@@ -417,6 +410,24 @@ public class GameView extends SurfaceView implements Callback {
     public boolean TouchEvent(int x, int y) {
         if (rectPrev.contains(x, y)) {
         	
+        if (mBelowFigureNum == mFigureTotalNum - 1)
+        	mBelowFigureNum = 0;
+        else
+        	mBelowFigureNum++;
+                 	
+       	mBelowFigureLeftNum = mBelowFigureNum - 1;        	
+       	mBelowFigureRightNum = mBelowFigureNum + 1;
+       	
+       	if (mBelowFigureLeftNum < 0)
+       		mBelowFigureLeftNum = mFigureTotalNum - 1;
+       	
+       	if (mBelowFigureRightNum > mFigureTotalNum - 1)
+       		mBelowFigureRightNum = 0;   
+            
+        }
+        
+        if (rectNext.contains(x, y)) {
+        	
         	if (mBelowFigureNum == 0)
                 mBelowFigureNum = mFigureTotalNum - 1;
             else
@@ -429,24 +440,8 @@ public class GameView extends SurfaceView implements Callback {
         		mBelowFigureLeftNum = mFigureTotalNum - 1;
         	
         	if (mBelowFigureRightNum > mFigureTotalNum - 1)
-        		mBelowFigureRightNum = 0;       	
-            
-        }
-        if (rectNext.contains(x, y)) {
-        	
-        	 if (mBelowFigureNum == mFigureTotalNum - 1)
-                 mBelowFigureNum = 0;
-             else
-                 mBelowFigureNum++;
-                  	
-        	mBelowFigureLeftNum = mBelowFigureNum - 1;        	
-        	mBelowFigureRightNum = mBelowFigureNum + 1;
-        	
-        	if (mBelowFigureLeftNum < 0)
-        		mBelowFigureLeftNum = mFigureTotalNum - 1;
-        	
-        	if (mBelowFigureRightNum > mFigureTotalNum - 1)
-        		mBelowFigureRightNum = 0;   
+        		mBelowFigureRightNum = 0;           	
+        	 
         	
         }
         if (rectPause.contains(x, y) || rectPlay.contains(x, y)) {
