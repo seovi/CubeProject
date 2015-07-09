@@ -167,7 +167,7 @@ public class GameView extends SurfaceView implements Callback {
         mThread.StopThread();
 
         mThread = null;
-        mThread = new GameThread(mHolder, mContext);
+        mThread = new GameThread(mHolder, mContext);       
         mThread.start();
     }
 
@@ -329,25 +329,29 @@ public class GameView extends SurfaceView implements Callback {
 
             DrawBackGround(canvas);
             DrawScore(canvas);
+            
             if(status == PROCESS) {
-            DrawCube(canvas);
-            DrawBottomCircle(canvas);
-            DrawBottomFigure(canvas);}
-        }
+            	DrawCube(canvas);
+            	DrawBottomCircle(canvas);
+            	DrawBottomFigure(canvas);}
+            }
 
         public void run() {
             Canvas canvas = null;
-            while (canRun) {
+            while (canRun) {                
+                try {
+					super.sleep(10);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                
                 canvas = mHolder.lockCanvas();
                 try {
                     synchronized (mHolder) {
                         switch (status) {
                             case PROCESS:
-                                Log.v(TAG, "PROCESS");
-                                // if (mTimerTask == null) {
-                                // mRunning = true;
-                                // doTimerTask();
-                                // }
+                                Log.v(TAG, "PROCESS");                                
                                 MoveAll();
                                 CheckCube();
                                 DrawAll(canvas);

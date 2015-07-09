@@ -16,12 +16,13 @@ public final class R {
         public static final int hexagon=0x7f020002;
         public static final int ic_launcher=0x7f020003;
         public static final int love=0x7f020004;
-        public static final int pause=0x7f020005;
-        public static final int pentagon=0x7f020006;
-        public static final int play=0x7f020007;
-        public static final int smile=0x7f020008;
-        public static final int square=0x7f020009;
-        public static final int triangle=0x7f02000a;
+        public static final int main=0x7f020005;
+        public static final int pause=0x7f020006;
+        public static final int pentagon=0x7f020007;
+        public static final int play=0x7f020008;
+        public static final int smile=0x7f020009;
+        public static final int square=0x7f02000a;
+        public static final int triangle=0x7f02000b;
     }
     public static final class id {
         public static final int view_ids_gameview=0x7f050000;
