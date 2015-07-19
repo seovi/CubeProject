@@ -495,6 +495,7 @@ containing a value of this type.
         public static final int holo_dark=0x7f070008;
         public static final int holo_light=0x7f070009;
         public static final int hybrid=0x7f070004;
+        public static final int main_image=0x7f07001c;
         public static final int match_parent=0x7f070010;
         public static final int monochrome=0x7f070018;
         public static final int none=0x7f070003;
@@ -507,9 +508,9 @@ containing a value of this type.
         public static final int strict_sandbox=0x7f07000c;
         public static final int terrain=0x7f070007;
         public static final int test=0x7f07000d;
-        public static final int view_ids_adview=0x7f07001c;
+        public static final int view_ids_adview=0x7f07001b;
         public static final int view_ids_gameview=0x7f07001a;
-        public static final int view_ids_start=0x7f07001b;
+        public static final int view_ids_start=0x7f07001d;
         public static final int wrap_content=0x7f070011;
     }
     public static final class integer {

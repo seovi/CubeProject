@@ -7,10 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class StartActivity extends Activity {
-	
-	Button mStartBtn;	
+		
+	ImageButton mStartBtn;	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,7 @@ public class StartActivity extends Activity {
         adView.loadAd(adRequest);
         
         
-        mStartBtn = (Button) findViewById(R.id.view_ids_start);
+        mStartBtn = (ImageButton) findViewById(R.id.view_ids_start);
         mStartBtn.setOnClickListener(mViewClickListener);
     }
     

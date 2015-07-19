@@ -1,10 +1,6 @@
 package com.lhscdh.cubeproject;
 
-import java.util.Random;
-
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 
 public class Cube {
 
