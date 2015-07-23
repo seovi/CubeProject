@@ -7,12 +7,14 @@ import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -172,7 +174,14 @@ public class GameView extends SurfaceView implements Callback {
     }
 
     public void GameOver() {
-
+    	SharedPreferences sharedPref = mContext.getSharedPreferences("PrefName", Context.MODE_PRIVATE);    	
+    	
+    	if(sharedPref.getInt("key_high", 0) < mScore) {
+    		SharedPreferences.Editor editor = sharedPref.edit();
+    		editor.putInt("key_high", mScore);    		
+    		editor.commit();
+    	}
+    	
         Intent intent = new Intent();
         intent.setAction("GAMEOVER");
         mContext.sendBroadcast(intent);
@@ -289,7 +298,9 @@ public class GameView extends SurfaceView implements Callback {
             paint.setColor(Color.BLUE);
             paint.setTextSize(50 * density);
             mTextWidth = (int) Math.ceil(paint.measureText(Integer.toString(mScore)));
-            canvas.drawText(Integer.toString(mScore), (Width - mTextWidth) / 2, 60 * density, paint);
+                        
+            paint.setTypeface(Typeface.MONOSPACE);
+            canvas.drawText(Integer.toString(mScore), (Width - mTextWidth) / 2, 60 * density, paint);            
 
         }
 
@@ -327,8 +338,8 @@ public class GameView extends SurfaceView implements Callback {
 
         public void DrawAll(Canvas canvas) {
 
-            DrawBackGround(canvas);
-            DrawScore(canvas);
+        	DrawBackGround(canvas);
+        	DrawScore(canvas);
             
             if(status == PROCESS) {
             	DrawCube(canvas);
@@ -340,9 +351,8 @@ public class GameView extends SurfaceView implements Callback {
             Canvas canvas = null;
             while (canRun) {                
                 try {
-					super.sleep(10);
+					super.sleep(5);
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
                 

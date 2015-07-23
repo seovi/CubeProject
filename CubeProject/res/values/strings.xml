@@ -4,6 +4,6 @@
     <string name="app_name">Cube Hole</string>
     <string name="hello_world">Hello world!</string>
     <string name="start">Start</string>
-    <string name="score">Score</string>
+    <string name="score">Score</string>        
 
 </resources>

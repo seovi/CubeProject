@@ -13,6 +13,11 @@
         android:layout_height="100dp"
         ads:adSize="BANNER"
         ads:adUnitId="pub-5977092817596044" />
+    
+    <com.lhscdh.cubeproject.StartScoreView
+        android:id="@+id/view_ids_startview"
+         android:layout_width="fill_parent"
+         android:layout_height="60dp" />       
       
     <ImageView
         android:contentDescription="@string/start"

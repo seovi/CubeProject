@@ -125,7 +125,7 @@ int id grayscale 0x7f070017
 int id holo_dark 0x7f070008
 int id holo_light 0x7f070009
 int id hybrid 0x7f070004
-int id main_image 0x7f07001c
+int id main_image 0x7f07001d
 int id match_parent 0x7f070010
 int id monochrome 0x7f070018
 int id none 0x7f070003
@@ -140,7 +140,8 @@ int id terrain 0x7f070007
 int id test 0x7f07000d
 int id view_ids_adview 0x7f07001b
 int id view_ids_gameview 0x7f07001a
-int id view_ids_start 0x7f07001d
+int id view_ids_start 0x7f07001e
+int id view_ids_startview 0x7f07001c
 int id wrap_content 0x7f070011
 int integer google_play_services_version 0x7f090000
 int layout activity_main 0x7f030000

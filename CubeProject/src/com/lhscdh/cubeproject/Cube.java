@@ -15,16 +15,13 @@ public class Cube {
 		this.x = x;
 		this.y = y;
 
-		if (figureNum == 0)
-			img = GameView.mFigure[0];
-		else if (figureNum == 1)
-			img = GameView.mFigure[1];
-		else if (figureNum == 2)
-			img = GameView.mFigure[2];
-		else if (figureNum == 3)
-			img = GameView.mFigure[3];
-		else if (figureNum == 4)
-			img = GameView.mFigure[4];
+		switch(figureNum) {
+		case 0 : img = GameView.mFigure[0];break;
+		case 1 : img = GameView.mFigure[1];break;
+		case 2 : img = GameView.mFigure[2];break;
+		case 3 : img = GameView.mFigure[3];break;
+		case 4 : img = GameView.mFigure[4];break;		
+		}		
 
 	}
  
