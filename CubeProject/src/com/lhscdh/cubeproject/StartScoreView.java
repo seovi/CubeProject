@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.Paint.Align;
 import android.util.AttributeSet;
 import android.view.View;
@@ -27,10 +28,12 @@ class StartScoreView extends View {
 	
 	private void init() {       
         
-		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mPaint = new Paint(Paint.FAKE_BOLD_TEXT_FLAG);
 		mPaint.setColor(Color.BLACK);
-		mPaint.setTextSize(50);
+		mPaint.setTypeface(Typeface.SANS_SERIF);
+		mPaint.setTextSize(70);
 		mPaint.setTextAlign(Align.CENTER);
+		mPaint.setAntiAlias(true);
 	}
 	
 	

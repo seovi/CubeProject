@@ -24,6 +24,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.view.SurfaceHolder.Callback;
+import android.view.ViewDebug.IntToString;
 
 public class GameView extends SurfaceView implements Callback {
 
@@ -35,11 +36,7 @@ public class GameView extends SurfaceView implements Callback {
 
     final static int GAMEOVER = 3; // Game Over
 
-    final static int ALL_CLEAR = 4; // All Clear
-
-    final static int REPLAY = 5;
-
-    final static int PAUSE = 6;
+    final static int ALL_CLEAR = 4; // All Clear    
 
     static GameThread mThread; // GameThread
 
@@ -106,7 +103,7 @@ public class GameView extends SurfaceView implements Callback {
         mFigure[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pentagon), 100, 100, true);
         
         mPause = BitmapFactory.decodeResource(getResources(), R.drawable.pause);
-        mPlay = BitmapFactory.decodeResource(getResources(), R.drawable.play);        
+        mPlay = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.play), 100, 100, true);        
        
         mFigureList = new ArrayList<Integer>();
 
@@ -125,7 +122,7 @@ public class GameView extends SurfaceView implements Callback {
 
         rectPause =
             new Rect((int) (Width - 100 * density), (int) (10 * density),
-                (int) (Width - 100 * density + mPause.getWidth()), (int) (10 * density + mPause.getHeight()));
+                (int) (Width - 100 * density + mPause.getWidth()), (int) (10 * density + mPause.getHeight()));       
 
         rectPlay =
             new Rect((int) (Width - 100 * density), (int) (10 * density),
@@ -156,11 +153,7 @@ public class GameView extends SurfaceView implements Callback {
         Log.v(TAG, "StopGame");
         mThread.StopThread();
     }
-
-    public static void PauseGame() {
-        mThread.PauseNResume(true);
-    }
-
+   
     public static void ResumeGame() {
         mThread.PauseNResume(false);
     }
@@ -174,17 +167,15 @@ public class GameView extends SurfaceView implements Callback {
     }
 
     public void GameOver() {
+    	mThread.PauseNResume(true);
+    	 
     	SharedPreferences sharedPref = mContext.getSharedPreferences("PrefName", Context.MODE_PRIVATE);    	
     	
     	if(sharedPref.getInt("key_high", 0) < mScore) {
     		SharedPreferences.Editor editor = sharedPref.edit();
     		editor.putInt("key_high", mScore);    		
     		editor.commit();
-    	}
-    	
-        Intent intent = new Intent();
-        intent.setAction("GAMEOVER");
-        mContext.sendBroadcast(intent);
+    	}        
     }
 
     class GameThread extends Thread {
@@ -198,19 +189,34 @@ public class GameView extends SurfaceView implements Callback {
 
         int loop;
 
-        int mTextWidth;
-
-        TimerTask mTimerTask;
-
-        Timer mTimer = new Timer();
+        int mTextWidth;        
 
         final Handler mHandler = new Handler();
 
-        Paint paint = new Paint();
+        Paint backGroundFillPaint;
+        Paint backGroudnLinePaint;
+        Paint scorePaint;
+        Paint bottomCircle;
 
         public GameThread(SurfaceHolder holder, Context context) {
-            paint.setColor(Color.WHITE);
-            paint.setAntiAlias(true);
+        	backGroundFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            backGroudnLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            scorePaint = new Paint(Paint.FAKE_BOLD_TEXT_FLAG);
+            
+            backGroudnLinePaint.setColor(Color.GRAY);
+            backGroudnLinePaint.setStrokeWidth(4.0f);
+            
+        	backGroundFillPaint.setColor(Color.WHITE);     
+        	        	
+        	scorePaint.setColor(Color.BLACK);       	
+        	scorePaint.setTypeface(Typeface.SANS_SERIF);
+        	scorePaint.setAntiAlias(true);
+        	
+        	bottomCircle = new Paint();
+        	bottomCircle.setAntiAlias(true);
+        	bottomCircle.setStyle(Paint.Style.STROKE);
+        	bottomCircle.setStrokeWidth(4);
+        	bottomCircle.setColor(Color.GRAY);
         }
 
         public void CheckCube() {
@@ -271,58 +277,68 @@ public class GameView extends SurfaceView implements Callback {
                 }
             }
         }
-
+        
         public void DrawBackGround(Canvas canvas) {
-            paint.setColor(Color.WHITE);
-            canvas.drawRect(0, 0, Width, Height, paint);
+            
+        	//DrawBackGroudFill
+            canvas.drawRect(0, 0, Width, Height, backGroundFillPaint);
+                     
+            //DrawBackGroundLine
+            canvas.drawLine(0, 90 * density, Width, 90 * density, backGroudnLinePaint);
 
-            paint.setColor(Color.GRAY);
-            paint.setStrokeWidth(4.0f);
-         
-            canvas.drawLine(0, 90 * density, Width, 90 * density, paint);
+            canvas.drawLine((int) (120 * density), (int) (90 * density), (int) (120 * density), Height - 350, backGroudnLinePaint);
+            
+            // <
+            canvas.drawLine((int) (60 * density) + 20 , (Height - 350 + 90 * density) / 2 - 100, (int) (60 * density) - 20 , (Height - 350 + 90 * density) / 2, backGroudnLinePaint);
+            canvas.drawLine((int) (60 * density) - 20 , (Height - 350 + 90 * density) / 2, (int) (60 * density) + 20 , (Height - 350 + 90 * density) / 2 + 100, backGroudnLinePaint);
 
-            canvas.drawLine((int) (120 * density), (int) (90 * density), (int) (120 * density), Height - 350, paint);
+            canvas.drawLine(Width - 120 * density, (int) (90 * density), Width - 120 * density, Height - 350, backGroudnLinePaint);
+            
+            // >
+            canvas.drawLine(Width - 60 * density - 20 , (Height - 350 + 90 * density) / 2 - 100, (int) Width - 60 * density + 20 , (Height - 350 + 90 * density) / 2, backGroudnLinePaint);
+            canvas.drawLine(Width - 60 * density + 20 , (Height - 350 + 90 * density) / 2, (int) Width - 60 * density - 20 , (Height - 350 + 90 * density) / 2 + 100, backGroudnLinePaint);
 
-            canvas.drawLine(Width - 120 * density, (int) (90 * density), Width - 120 * density, Height - 350, paint);
+            canvas.drawLine(0, Height - 350, 120 * density, Height - 350, backGroudnLinePaint);
 
-            canvas.drawLine(0, Height - 350, 120 * density, Height - 350, paint);
+            canvas.drawLine(Width - 120 * density, Height - 350, Width, Height - 350, backGroudnLinePaint);
 
-            canvas.drawLine(Width - 120 * density, Height - 350, Width, Height - 350, paint);
-
-            canvas.drawLine(0, Height - 150, Width, Height - 150, paint);
-
-            canvas.drawBitmap(mPause, Width - 100 * density, 10 * density, null);
+            canvas.drawLine(0, Height - 150, Width, Height - 150, backGroudnLinePaint);           
+        }
+        
+        public void DrawPlayButton(Canvas canvas) {
+        
+        	 if(status == PROCESS) {
+        		 canvas.drawBitmap(mPause, Width - 90 * density, 20 * density, backGroudnLinePaint);
+             }
+        	 else {       
+        		 canvas.drawBitmap(mPlay, Width - 90 * density, 20 * density, backGroudnLinePaint);
+        	 }
+        	 
         }
 
         public void DrawScore(Canvas canvas) {
-            paint.setColor(Color.BLUE);
-            paint.setTextSize(50 * density);
-            mTextWidth = (int) Math.ceil(paint.measureText(Integer.toString(mScore)));
-                        
-            paint.setTypeface(Typeface.MONOSPACE);
-            canvas.drawText(Integer.toString(mScore), (Width - mTextWidth) / 2, 60 * density, paint);            
+        	
+        	scorePaint.setTextSize(50 * density);
+        	mTextWidth = (int) Math.ceil(scorePaint.measureText(Integer.toString(mScore)));
+            
+        	canvas.drawText(Integer.toString(mScore), (Width - mTextWidth) / 2, 60 * density, scorePaint);           
 
         }
 
         public void DrawBottomCircle(Canvas canvas) {
-
-            Paint circle = new Paint();
-            circle.setAntiAlias(true);
-            circle.setStyle(Paint.Style.STROKE);
-            circle.setStrokeWidth(4);
-            circle.setColor(Color.GRAY);
+            
 
             if (mIsScored) {
-                circle.setColor(Color.MAGENTA);
-                if (circleColorTime > 10) {
-                    Log.v(TAG, Integer.toString(circleColorTime));
+            	bottomCircle.setColor(Color.MAGENTA);
+                if (circleColorTime > 10) {                    
                     circleColorTime = 0;
                     mIsScored = false;
+                    bottomCircle.setColor(Color.GRAY);
                 }
                 circleColorTime++;
             }
 
-            canvas.drawCircle(Width / 2, (480 * density) +  mFigure[mBelowFigureNum].getWidth() / 2, (40 * density), circle);
+            canvas.drawCircle(Width / 2, (480 * density) +  mFigure[mBelowFigureNum].getWidth() / 2, (40 * density), bottomCircle);
 
         }
 
@@ -339,7 +355,8 @@ public class GameView extends SurfaceView implements Callback {
         public void DrawAll(Canvas canvas) {
 
         	DrawBackGround(canvas);
-        	DrawScore(canvas);
+        	DrawPlayButton(canvas);
+        	DrawScore(canvas);       	
             
             if(status == PROCESS) {
             	DrawCube(canvas);
@@ -370,24 +387,11 @@ public class GameView extends SurfaceView implements Callback {
                                 break;
                             case ALL_CLEAR:
                                 break;
-                            case GAMEOVER:
-                                // StopGame();
-                                // PauseGame();
-                                // DrawAll(canvas);
-                                // PauseGame();
+                            case GAMEOVER:                                
+                            	DrawAll(canvas);                                                            	                            	
                                 GameOver();
                                 break;
-                            case REPLAY:
-                                mPause = BitmapFactory.decodeResource(getResources(), R.drawable.pause);
-                                DrawAll(canvas);
-                                status = PROCESS;
-                                break;
-                            case PAUSE:
-                                mPause = BitmapFactory.decodeResource(getResources(), R.drawable.play);
-                                DrawAll(canvas);
-                                PauseGame();
-                                break;
-                        }
+                                }
                     } // sync
                 } finally {
                     if (canvas != null)
@@ -459,13 +463,20 @@ public class GameView extends SurfaceView implements Callback {
         	
         }
         if (rectPause.contains(x, y) || rectPlay.contains(x, y)) {
-            if (status == PROCESS)
-                status = PAUSE;
-            else if (status == PAUSE) {
-                status = REPLAY;
-                ResumeGame();
-
-            }
+////            if (status == PROCESS)
+////                status = PAUSE;
+////            else if (status == PAUSE) {
+////                status = REPLAY;
+////                ResumeGame();
+//
+//            }
+        	
+        	if (status == GAMEOVER) {
+        		 Intent intent = new Intent();
+        		 intent.setAction("GAMEOVER");
+        		 mContext.sendBroadcast(intent);        		
+        	}
+        	
         }
         if (rectPlay.contains(x, y)) {
 
@@ -489,31 +500,3 @@ public class GameView extends SurfaceView implements Callback {
         // return true;
     }
 } // SurfaceView
-
-// public void doTimerTask() {
-// mTimerTask = new TimerTask() {
-// public void run() {
-// mHandler.post(new Runnable() {
-// public void run() {
-// if (!mRunning)
-// return;
-// // mCube.add(new Cube((int) (150 * density),
-// // (int) (90 * density)));
-// }
-// });
-// }
-// };
-// mTimer.schedule(mTimerTask, 0, 3000);
-// }
-//
-// public void stopTask() {
-// if (mTimerTask != null) {
-// mRunning = false;
-// mTimerTask.cancel();
-// mTimerTask = null;
-// }
-// }
-//
-// public void doTimerPause() {
-// mRunning = !mRunning;
-// }

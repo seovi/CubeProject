@@ -20,7 +20,9 @@ public class Cube {
 		case 1 : img = GameView.mFigure[1];break;
 		case 2 : img = GameView.mFigure[2];break;
 		case 3 : img = GameView.mFigure[3];break;
-		case 4 : img = GameView.mFigure[4];break;		
+		case 4 : img = GameView.mFigure[4];break;
+		default:
+			img = GameView.mFigure[0];break;
 		}		
 
 	}
