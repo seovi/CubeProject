@@ -32,7 +32,7 @@ public class GameView extends SurfaceView implements Callback {
 
     final static int PROCESS = 1;
 
-    final static int STAGE_CLEAR = 2; // Stage Clear
+    final static int GAMEOVER_PROCESS = 2; // Stage Clear
 
     final static int GAMEOVER = 3; // Game Over
 
@@ -44,9 +44,7 @@ public class GameView extends SurfaceView implements Callback {
 
     static Context mContext; // Context
 
-    static ArrayList<Cube> mCube;
-
-    static Bitmap mPause, mPlay;
+    static ArrayList<Cube> mCube;    
 
     static Bitmap mFigure[];
 
@@ -65,6 +63,12 @@ public class GameView extends SurfaceView implements Callback {
     static int mScore = 0;
 
     static boolean mIsScored = false;
+    
+    static boolean mIsTouchPre = false;
+    static boolean mIsTouchNext = false;
+    
+    int preColorTime = 0;
+    int nextColorTime = 0;
 
     static int mFigureIndex = 0;
 
@@ -96,14 +100,11 @@ public class GameView extends SurfaceView implements Callback {
 
         mCube = new ArrayList<Cube>();
         mFigure = new Bitmap[mFigureTotalNum];
-        mFigure[0] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.circle), 100, 100, true);
-        mFigure[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.love), 100, 100, true);
-        mFigure[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.triangle), 100, 100, true);        
-        mFigure[3] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.diamond), 100, 100, true);
-        mFigure[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pentagon), 100, 100, true);
-        
-        mPause = BitmapFactory.decodeResource(getResources(), R.drawable.pause);
-        mPlay = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.play), 100, 100, true);        
+        mFigure[0] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.circle), 80, 80, true);
+        mFigure[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.love), 80, 80, true);
+        mFigure[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.triangle), 80, 80, true);        
+        mFigure[3] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.diamond), 80, 80, true);
+        mFigure[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pentagon), 80, 80, true);                
        
         mFigureList = new ArrayList<Integer>();
 
@@ -111,7 +112,7 @@ public class GameView extends SurfaceView implements Callback {
 
     private Rect rectPrev, rectNext;
 
-    private Rect rectPause, rectPlay;
+    private Rect rectPlay;
 
     // canvas.drawBitmap(mPause, Width - 100 * density, 10 * density, null);
     public void InitTouchCor() { // init touch coordinate
@@ -119,14 +120,11 @@ public class GameView extends SurfaceView implements Callback {
         rectPrev = new Rect(0, (int) (90 * density), (int) (120 * density), Height - 350);
 
         rectNext = new Rect((int) (Width - 120 * density), (int) (90 * density), Width, Height - 350);
-
-        rectPause =
-            new Rect((int) (Width - 100 * density), (int) (10 * density),
-                (int) (Width - 100 * density + mPause.getWidth()), (int) (10 * density + mPause.getHeight()));       
-
+        
         rectPlay =
-            new Rect((int) (Width - 100 * density), (int) (10 * density),
-                (int) (Width - 100 * density + mPlay.getWidth()), (int) (10 * density + mPlay.getHeight()));
+                new Rect((int) (Width - 100 * density), (int) (10 * density),
+                    (int) (Width - 100 * density + 100), (int) (10 * density + 100));
+            
     }
 
     @Override
@@ -166,7 +164,7 @@ public class GameView extends SurfaceView implements Callback {
         mThread.start();
     }
 
-    public void GameOver() {
+    public static void GameOver() {
     	mThread.PauseNResume(true);
     	 
     	SharedPreferences sharedPref = mContext.getSharedPreferences("PrefName", Context.MODE_PRIVATE);    	
@@ -186,6 +184,7 @@ public class GameView extends SurfaceView implements Callback {
         boolean mRunning = true;
 
         int circleColorTime = 0;
+        int gameOverAlphaTime = 0;
 
         int loop;
 
@@ -195,16 +194,27 @@ public class GameView extends SurfaceView implements Callback {
 
         Paint backGroundFillPaint;
         Paint backGroudnLinePaint;
+        Paint prevTouchPaint;
+        Paint nextTouchPaint;
         Paint scorePaint;
         Paint bottomCircle;
+        Paint gameOverPaint;
 
         public GameThread(SurfaceHolder holder, Context context) {
         	backGroundFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             backGroudnLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            prevTouchPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            nextTouchPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             scorePaint = new Paint(Paint.FAKE_BOLD_TEXT_FLAG);
             
             backGroudnLinePaint.setColor(Color.GRAY);
             backGroudnLinePaint.setStrokeWidth(4.0f);
+            
+            prevTouchPaint.setColor(Color.GRAY);
+            prevTouchPaint.setStrokeWidth(4.0f);
+            
+            nextTouchPaint.setColor(Color.GRAY);
+            nextTouchPaint.setStrokeWidth(4.0f);
             
         	backGroundFillPaint.setColor(Color.WHITE);     
         	        	
@@ -217,6 +227,10 @@ public class GameView extends SurfaceView implements Callback {
         	bottomCircle.setStyle(Paint.Style.STROKE);
         	bottomCircle.setStrokeWidth(4);
         	bottomCircle.setColor(Color.GRAY);
+        	
+        	gameOverPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        	gameOverPaint.setColor(Color.WHITE);
+        	gameOverPaint.setAlpha(175);
         }
 
         public void CheckCube() {
@@ -225,7 +239,8 @@ public class GameView extends SurfaceView implements Callback {
             for (Cube tmp : mCube) {
 
                 if (tmp.y >= 475 * density && mFigureList.get(0) != mBelowFigureNum) {
-                    status = GAMEOVER;
+                    status = GAMEOVER_PROCESS;
+                    gameOverAlphaTime = 0;
                 } else if (tmp.y >= 475 * density && mFigureList.get(0) == mBelowFigureNum) {
 
                     mScore = mScore + 1;
@@ -287,34 +302,41 @@ public class GameView extends SurfaceView implements Callback {
             canvas.drawLine(0, 90 * density, Width, 90 * density, backGroudnLinePaint);
 
             canvas.drawLine((int) (120 * density), (int) (90 * density), (int) (120 * density), Height - 350, backGroudnLinePaint);
-            
-            // <
-            canvas.drawLine((int) (60 * density) + 20 , (Height - 350 + 90 * density) / 2 - 100, (int) (60 * density) - 20 , (Height - 350 + 90 * density) / 2, backGroudnLinePaint);
-            canvas.drawLine((int) (60 * density) - 20 , (Height - 350 + 90 * density) / 2, (int) (60 * density) + 20 , (Height - 350 + 90 * density) / 2 + 100, backGroudnLinePaint);
-
-            canvas.drawLine(Width - 120 * density, (int) (90 * density), Width - 120 * density, Height - 350, backGroudnLinePaint);
-            
-            // >
-            canvas.drawLine(Width - 60 * density - 20 , (Height - 350 + 90 * density) / 2 - 100, (int) Width - 60 * density + 20 , (Height - 350 + 90 * density) / 2, backGroudnLinePaint);
-            canvas.drawLine(Width - 60 * density + 20 , (Height - 350 + 90 * density) / 2, (int) Width - 60 * density - 20 , (Height - 350 + 90 * density) / 2 + 100, backGroudnLinePaint);
+                        
+            canvas.drawLine(Width - 120 * density, (int) (90 * density), Width - 120 * density, Height - 350, backGroudnLinePaint);           
 
             canvas.drawLine(0, Height - 350, 120 * density, Height - 350, backGroudnLinePaint);
 
             canvas.drawLine(Width - 120 * density, Height - 350, Width, Height - 350, backGroudnLinePaint);
 
-            canvas.drawLine(0, Height - 150, Width, Height - 150, backGroudnLinePaint);           
+            canvas.drawLine(0, Height - 150, Width, Height - 150, backGroudnLinePaint);
+            
+            // <
+            if (preColorTime > 0) {
+            	prevTouchPaint.setColor(Color.MAGENTA);
+            	preColorTime--;
+            }
+            else {
+            	prevTouchPaint.setColor(Color.GRAY);
+            }
+            canvas.drawLine((int) (60 * density) + 20 , (Height - 350 + 90 * density) / 2 - 100, (int) (60 * density) - 20 , (Height - 350 + 90 * density) / 2, prevTouchPaint);
+            canvas.drawLine((int) (60 * density) - 20 , (Height - 350 + 90 * density) / 2, (int) (60 * density) + 20 , (Height - 350 + 90 * density) / 2 + 100, prevTouchPaint);
+            
+            // >
+            if (nextColorTime > 0) {
+            	nextTouchPaint.setColor(Color.MAGENTA);
+            	nextColorTime--;
+            }
+            else {
+            	nextTouchPaint.setColor(Color.GRAY);
+            }
+            
+            canvas.drawLine(Width - 60 * density - 20 , (Height - 350 + 90 * density) / 2 - 100, (int) Width - 60 * density + 20 , (Height - 350 + 90 * density) / 2, nextTouchPaint);
+            canvas.drawLine(Width - 60 * density + 20 , (Height - 350 + 90 * density) / 2, (int) Width - 60 * density - 20 , (Height - 350 + 90 * density) / 2 + 100, nextTouchPaint);               
+
         }
         
-        public void DrawPlayButton(Canvas canvas) {
         
-        	 if(status == PROCESS) {
-        		 canvas.drawBitmap(mPause, Width - 90 * density, 20 * density, backGroudnLinePaint);
-             }
-        	 else {       
-        		 canvas.drawBitmap(mPlay, Width - 90 * density, 20 * density, backGroudnLinePaint);
-        	 }
-        	 
-        }
 
         public void DrawScore(Canvas canvas) {
         	
@@ -330,7 +352,7 @@ public class GameView extends SurfaceView implements Callback {
 
             if (mIsScored) {
             	bottomCircle.setColor(Color.MAGENTA);
-                if (circleColorTime > 10) {                    
+                if (circleColorTime > 12) {                    
                     circleColorTime = 0;
                     mIsScored = false;
                     bottomCircle.setColor(Color.GRAY);
@@ -354,15 +376,25 @@ public class GameView extends SurfaceView implements Callback {
 
         public void DrawAll(Canvas canvas) {
 
-        	DrawBackGround(canvas);
-        	DrawPlayButton(canvas);
-        	DrawScore(canvas);       	
+        	DrawBackGround(canvas);        	
+        	DrawScore(canvas);
+        	
+        	DrawCube(canvas);
+        	DrawBottomCircle(canvas);
+        	DrawBottomFigure(canvas);
             
-            if(status == PROCESS) {
-            	DrawCube(canvas);
-            	DrawBottomCircle(canvas);
-            	DrawBottomFigure(canvas);}
+            if(status == GAMEOVER_PROCESS) {    
+            	if(gameOverAlphaTime < 14 ) {
+            		canvas.drawRect(0, 0, Width, Height, gameOverPaint);
+            		
+            	}
+            	
+            	if(gameOverAlphaTime > 20 ) {
+            		status = GAMEOVER;          		
+            	}
+            	gameOverAlphaTime++;
             }
+        }
 
         public void run() {
             Canvas canvas = null;
@@ -383,11 +415,14 @@ public class GameView extends SurfaceView implements Callback {
                                 CheckCube();
                                 DrawAll(canvas);
                                 break;
-                            case STAGE_CLEAR:
+                            case GAMEOVER_PROCESS:
+                            	Log.v(TAG, "GAMEOVER_PROCESS");
+                            	DrawAll(canvas);
                                 break;
                             case ALL_CLEAR:
                                 break;
-                            case GAMEOVER:                                
+                            case GAMEOVER:            
+                            	Log.v(TAG, "GAMEOVER");
                             	DrawAll(canvas);                                                            	                            	
                                 GameOver();
                                 break;
@@ -426,7 +461,24 @@ public class GameView extends SurfaceView implements Callback {
     } // GameThread ��
 
     public boolean TouchEvent(int x, int y) {
+    	
+    	if (status ==  GAMEOVER_PROCESS)
+    		return true;
+    	
+    	if (status == GAMEOVER) {
+    		if (rectPlay.contains(x, y)) {
+    			Intent intent = new Intent();
+    			intent.setAction("GAMEOVER");
+    			mContext.sendBroadcast(intent);        		
+         	}
+    		
+    		return true;
+         }
+    	 
+    	 
         if (rectPrev.contains(x, y)) {
+        
+        	preColorTime = 12;
         	
         if (mBelowFigureNum == mFigureTotalNum - 1)
         	mBelowFigureNum = 0;
@@ -440,11 +492,14 @@ public class GameView extends SurfaceView implements Callback {
        		mBelowFigureLeftNum = mFigureTotalNum - 1;
        	
        	if (mBelowFigureRightNum > mFigureTotalNum - 1)
-       		mBelowFigureRightNum = 0;   
-            
+       		mBelowFigureRightNum = 0; 
+       	
+       		return true;
         }
         
         if (rectNext.contains(x, y)) {
+        	
+        	nextColorTime = 12;
         	
         	if (mBelowFigureNum == 0)
                 mBelowFigureNum = mFigureTotalNum - 1;
@@ -460,28 +515,11 @@ public class GameView extends SurfaceView implements Callback {
         	if (mBelowFigureRightNum > mFigureTotalNum - 1)
         		mBelowFigureRightNum = 0;           	
         	 
+        	return true;
         	
-        }
-        if (rectPause.contains(x, y) || rectPlay.contains(x, y)) {
-////            if (status == PROCESS)
-////                status = PAUSE;
-////            else if (status == PAUSE) {
-////                status = REPLAY;
-////                ResumeGame();
-//
-//            }
-        	
-        	if (status == GAMEOVER) {
-        		 Intent intent = new Intent();
-        		 intent.setAction("GAMEOVER");
-        		 mContext.sendBroadcast(intent);        		
-        	}
-        	
-        }
-        if (rectPlay.contains(x, y)) {
-
-        }
-        return true;
+        }       
+        
+        return false;
     }
 
     // -------------------------------------
