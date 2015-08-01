@@ -373,6 +373,46 @@ public class GameView extends SurfaceView implements Callback {
            
             canvas.drawBitmap(mFigure[mBelowFigureRightNum], Width - 150, (int) (480 * density), null);
         }
+        
+        public void DrawGameOver(Canvas canvas) {
+        
+        	 if(status == GAMEOVER_PROCESS) {    
+             	if(gameOverAlphaTime < 21 ) {             		
+             		int alpha = 255 - 255 / 20 * gameOverAlphaTime;
+             		gameOverPaint.setAlpha(alpha);
+             		canvas.drawRect(0, 0, Width, Height, gameOverPaint);
+             		
+             	}
+             	
+             	if (33 <gameOverAlphaTime) {
+             		gameOverPaint.setAlpha(255);
+             		status = GAMEOVER;             		
+             		return;
+             	}
+             	
+             	gameOverAlphaTime++;
+        	 }
+        	 
+        	 if (status == GAMEOVER) {
+        		 
+        		// gameOverAlphaTime 35 ~ 75
+              	if(34 < gameOverAlphaTime && gameOverAlphaTime < 76) {
+              		int size = gameOverAlphaTime - 35;
+              		size = Height / 40 * size; 
+              		
+              		canvas.drawRect(0, 0, Width, size, gameOverPaint);
+              	}
+              	
+              	if (76 < gameOverAlphaTime ) {
+             		GameOver();
+             		gameOverAlphaTime = 0;             		
+             		return;
+             	}
+             	
+        	 }
+        	 
+        	 gameOverAlphaTime++;        	 
+        }
 
         public void DrawAll(Canvas canvas) {
 
@@ -382,18 +422,8 @@ public class GameView extends SurfaceView implements Callback {
         	DrawCube(canvas);
         	DrawBottomCircle(canvas);
         	DrawBottomFigure(canvas);
-            
-            if(status == GAMEOVER_PROCESS) {    
-            	if(gameOverAlphaTime < 14 ) {
-            		canvas.drawRect(0, 0, Width, Height, gameOverPaint);
-            		
-            	}
-            	
-            	if(gameOverAlphaTime > 20 ) {
-            		status = GAMEOVER;          		
-            	}
-            	gameOverAlphaTime++;
-            }
+        	DrawGameOver(canvas);
+           
         }
 
         public void run() {
@@ -423,8 +453,7 @@ public class GameView extends SurfaceView implements Callback {
                                 break;
                             case GAMEOVER:            
                             	Log.v(TAG, "GAMEOVER");
-                            	DrawAll(canvas);                                                            	                            	
-                                GameOver();
+                            	DrawGameOver(canvas);
                                 break;
                                 }
                     } // sync
