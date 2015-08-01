@@ -183,8 +183,9 @@ public class GameView extends SurfaceView implements Callback {
 
         boolean mRunning = true;
 
-        int circleColorTime = 0;
-        int gameOverAlphaTime = 0;
+        int circleColorTime = 0;        
+        int gameOverProcessCount = 0;
+        int gameOverCount = 0;
 
         int loop;
 
@@ -229,8 +230,7 @@ public class GameView extends SurfaceView implements Callback {
         	bottomCircle.setColor(Color.GRAY);
         	
         	gameOverPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        	gameOverPaint.setColor(Color.WHITE);
-        	gameOverPaint.setAlpha(175);
+        	gameOverPaint.setColor(Color.WHITE);        	
         }
 
         public void CheckCube() {
@@ -240,7 +240,7 @@ public class GameView extends SurfaceView implements Callback {
 
                 if (tmp.y >= 475 * density && mFigureList.get(0) != mBelowFigureNum) {
                     status = GAMEOVER_PROCESS;
-                    gameOverAlphaTime = 0;
+                    gameOverProcessCount = 0;
                 } else if (tmp.y >= 475 * density && mFigureList.get(0) == mBelowFigureNum) {
 
                     mScore = mScore + 1;
@@ -375,54 +375,65 @@ public class GameView extends SurfaceView implements Callback {
         }
         
         public void DrawGameOver(Canvas canvas) {
-        
-        	 if(status == GAMEOVER_PROCESS) {    
-             	if(gameOverAlphaTime < 21 ) {             		
-             		int alpha = 255 - 255 / 20 * gameOverAlphaTime;
-             		gameOverPaint.setAlpha(alpha);
-             		canvas.drawRect(0, 0, Width, Height, gameOverPaint);
+        	
+          	if(gameOverCount < 21) {
+          		int size = Height / 20 * gameOverCount;
+          		canvas.drawRect(0, 0, Width, size, gameOverPaint);
+          	}
+          	
+          	
+//          	if (70 < gameOverCount ) {
+//          		gameOverPaint.setTextSize(40 * density);
+//          		String score = "SCORE : " + mScore;
+//            	mTextWidth = (int) Math.ceil(scorePaint.measureText(score));                
+//            	canvas.drawText(score, (Width - mTextWidth) / 2, 80 * density, scorePaint);      
+//            	
+//         		GameOver();        		
+//         	}          	
+          	
+          	if (76 < gameOverCount ) {
+         		GameOver();
+         		gameOverCount = 0;             		
+         		return;
+         	}
+          	
+            gameOverCount++;
+             	
+       	 }
+        	 
+        	 
+      
+
+        public void DrawAll(Canvas canvas) {
+
+        	if (status == PROCESS || status == GAMEOVER_PROCESS) {
+	        	DrawBackGround(canvas);        	
+	        	DrawScore(canvas);
+	        	
+	        	DrawCube(canvas);
+	        	DrawBottomCircle(canvas);
+	        	DrawBottomFigure(canvas);
+        	}
+        	
+        	if (status == GAMEOVER_PROCESS) {    
+             	if(gameOverProcessCount < 19 ) {             		
+             		int alpha = 255 - 255 / 20 * gameOverProcessCount;
+             		backGroundFillPaint.setAlpha(alpha);
+             		canvas.drawRect(0, 0, Width, Height, backGroundFillPaint);
              		
              	}
              	
-             	if (33 <gameOverAlphaTime) {
-             		gameOverPaint.setAlpha(255);
+             	if (33 < gameOverProcessCount) {             		
              		status = GAMEOVER;             		
              		return;
              	}
              	
-             	gameOverAlphaTime++;
-        	 }
-        	 
-        	 if (status == GAMEOVER) {
-        		 
-        		// gameOverAlphaTime 35 ~ 75
-              	if(34 < gameOverAlphaTime && gameOverAlphaTime < 76) {
-              		int size = gameOverAlphaTime - 35;
-              		size = Height / 40 * size; 
-              		
-              		canvas.drawRect(0, 0, Width, size, gameOverPaint);
-              	}
-              	
-              	if (76 < gameOverAlphaTime ) {
-             		GameOver();
-             		gameOverAlphaTime = 0;             		
-             		return;
-             	}
-             	
-        	 }
-        	 
-        	 gameOverAlphaTime++;        	 
-        }
-
-        public void DrawAll(Canvas canvas) {
-
-        	DrawBackGround(canvas);        	
-        	DrawScore(canvas);
+             	gameOverProcessCount++;             	
+        	}
         	
-        	DrawCube(canvas);
-        	DrawBottomCircle(canvas);
-        	DrawBottomFigure(canvas);
-        	DrawGameOver(canvas);
+        	if (status == GAMEOVER) {
+        		DrawGameOver(canvas);
+        	}
            
         }
 
@@ -442,20 +453,19 @@ public class GameView extends SurfaceView implements Callback {
                             case PROCESS:
                                 Log.v(TAG, "PROCESS");                                
                                 MoveAll();
-                                CheckCube();
-                                DrawAll(canvas);
+                                CheckCube();                                
                                 break;
                             case GAMEOVER_PROCESS:
-                            	Log.v(TAG, "GAMEOVER_PROCESS");
-                            	DrawAll(canvas);
+                            	Log.v(TAG, "GAMEOVER_PROCESS");                            	
                                 break;
                             case ALL_CLEAR:
                                 break;
                             case GAMEOVER:            
-                            	Log.v(TAG, "GAMEOVER");
-                            	DrawGameOver(canvas);
+                            	Log.v(TAG, "GAMEOVER");                            	
                                 break;
                                 }
+                        
+                        DrawAll(canvas);
                     } // sync
                 } finally {
                     if (canvas != null)
