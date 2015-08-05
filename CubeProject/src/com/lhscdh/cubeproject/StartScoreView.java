@@ -31,8 +31,8 @@ class StartScoreView extends View {
 		mPaint = new Paint(Paint.FAKE_BOLD_TEXT_FLAG);
 		mPaint.setColor(Color.BLACK);
 		mPaint.setTypeface(Typeface.SANS_SERIF);
-		mPaint.setTextSize(70);
-		mPaint.setTextAlign(Align.CENTER);
+		mPaint.setTextSize(80);
+		mPaint.setTextAlign(Align.CENTER);		
 		mPaint.setAntiAlias(true);
 	}
 	

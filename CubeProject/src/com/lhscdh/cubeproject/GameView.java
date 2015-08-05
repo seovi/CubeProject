@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.Paint.Align;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -60,6 +61,7 @@ public class GameView extends SurfaceView implements Callback {
 
     static int mFigureGoalNum;
 
+    static int mBestScore = 0;
     static int mScore = 0;
 
     static boolean mIsScored = false;
@@ -107,12 +109,15 @@ public class GameView extends SurfaceView implements Callback {
         mFigure[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pentagon), 80, 80, true);                
        
         mFigureList = new ArrayList<Integer>();
+        
+        SharedPreferences sharedPref = mContext.getSharedPreferences("PrefName", Context.MODE_PRIVATE);       
+        mBestScore = sharedPref.getInt("key_high", 0);
 
     }
 
     private Rect rectPrev, rectNext;
 
-    private Rect rectPlay;
+    private Rect rectGameoverOk;
 
     // canvas.drawBitmap(mPause, Width - 100 * density, 10 * density, null);
     public void InitTouchCor() { // init touch coordinate
@@ -121,9 +126,9 @@ public class GameView extends SurfaceView implements Callback {
 
         rectNext = new Rect((int) (Width - 120 * density), (int) (90 * density), Width, Height - 350);
         
-        rectPlay =
-                new Rect((int) (Width - 100 * density), (int) (10 * density),
-                    (int) (Width - 100 * density + 100), (int) (10 * density + 100));
+        rectGameoverOk =
+                new Rect((int) (Width / 2 - 50 * density), (int) (300 * density),
+                    (int) (Width / 2 + 50 * density), (int) (300 * density + 100 * density));
             
     }
 
@@ -167,9 +172,9 @@ public class GameView extends SurfaceView implements Callback {
     public static void GameOver() {
     	mThread.PauseNResume(true);
     	 
-    	SharedPreferences sharedPref = mContext.getSharedPreferences("PrefName", Context.MODE_PRIVATE);    	
+    	SharedPreferences sharedPref = mContext.getSharedPreferences("PrefName", Context.MODE_PRIVATE);
     	
-    	if(sharedPref.getInt("key_high", 0) < mScore) {
+    	if(mBestScore < mScore) {
     		SharedPreferences.Editor editor = sharedPref.edit();
     		editor.putInt("key_high", mScore);    		
     		editor.commit();
@@ -229,7 +234,8 @@ public class GameView extends SurfaceView implements Callback {
         	bottomCircle.setStrokeWidth(4);
         	bottomCircle.setColor(Color.GRAY);
         	
-        	gameOverPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        	gameOverPaint = new Paint(Paint.FAKE_BOLD_TEXT_FLAG);
+        	gameOverPaint.setAntiAlias(true);
         	gameOverPaint.setColor(Color.WHITE);        	
         }
 
@@ -376,22 +382,28 @@ public class GameView extends SurfaceView implements Callback {
         
         public void DrawGameOver(Canvas canvas) {
         	
-          	if(gameOverCount < 21) {
-          		int size = Height / 20 * gameOverCount;
+          	if(gameOverCount < 41) {
+          		int size = Height / 40 * gameOverCount;
           		canvas.drawRect(0, 0, Width, size, gameOverPaint);
           	}
-          	
-          	
-//          	if (70 < gameOverCount ) {
-//          		gameOverPaint.setTextSize(40 * density);
-//          		String score = "SCORE : " + mScore;
-//            	mTextWidth = (int) Math.ceil(scorePaint.measureText(score));                
-//            	canvas.drawText(score, (Width - mTextWidth) / 2, 80 * density, scorePaint);      
-//            	
-//         		GameOver();        		
-//         	}          	
-          	
-          	if (76 < gameOverCount ) {
+         	
+          	if (42 < gameOverCount ) {
+          		gameOverPaint.setColor(Color.BLACK);       	
+          		gameOverPaint.setTypeface(Typeface.SANS_SERIF);
+          		gameOverPaint.setTextSize(30 * density);
+          		
+          		String bestScore = "BEST";            	
+            	canvas.drawText(bestScore, 20 * density, 80 * density, gameOverPaint);            	
+          		String score = "SCORE";            	                
+            	canvas.drawText(score, 20 * density, 160 * density, gameOverPaint);
+            	
+            	gameOverPaint.setTextAlign(Align.CENTER);     	
+            	canvas.drawText(Integer.toString(mBestScore), Width - 80 * density, 80 * density, gameOverPaint);
+            	canvas.drawText(Integer.toString(mScore), Width - 80 * density, 160 * density, gameOverPaint);
+            	
+            	//canvas.drawRect(rectGameoverOk, gameOverPaint);
+            	canvas.drawText("OK", Width / 2, 330 * density, gameOverPaint);
+            	
          		GameOver();
          		gameOverCount = 0;             		
          		return;
@@ -416,8 +428,9 @@ public class GameView extends SurfaceView implements Callback {
         	}
         	
         	if (status == GAMEOVER_PROCESS) {    
-             	if(gameOverProcessCount < 19 ) {             		
-             		int alpha = 255 - 255 / 20 * gameOverProcessCount;
+             	if(gameOverProcessCount < 21 ) {             		
+             		int alpha = 255 - 255 / 20 * gameOverProcessCount;             		
+             		if (alpha < 40) { alpha = 0; }
              		backGroundFillPaint.setAlpha(alpha);
              		canvas.drawRect(0, 0, Width, Height, backGroundFillPaint);
              		
@@ -505,7 +518,7 @@ public class GameView extends SurfaceView implements Callback {
     		return true;
     	
     	if (status == GAMEOVER) {
-    		if (rectPlay.contains(x, y)) {
+    		if (rectGameoverOk.contains(x, y)) {
     			Intent intent = new Intent();
     			intent.setAction("GAMEOVER");
     			mContext.sendBroadcast(intent);        		
