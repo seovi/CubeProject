@@ -50,7 +50,8 @@ public class MainActivity extends Activity {
 		super.onBackPressed();
 
 		GameView.GameOver();
-		finish();
+		System.exit(0);
+		//finish();
 
 	}
 

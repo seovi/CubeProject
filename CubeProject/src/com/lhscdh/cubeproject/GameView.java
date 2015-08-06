@@ -25,7 +25,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.view.SurfaceHolder.Callback;
-import android.view.ViewDebug.IntToString;
 
 public class GameView extends SurfaceView implements Callback {
 
@@ -62,7 +61,7 @@ public class GameView extends SurfaceView implements Callback {
     static int mFigureGoalNum;
 
     static int mBestScore = 0;
-    static int mScore = 0;
+    static int mScore = 0;    
 
     static boolean mIsScored = false;
     
@@ -193,6 +192,7 @@ public class GameView extends SurfaceView implements Callback {
         int gameOverCount = 0;
 
         int loop;
+        int alphaSpeed = 0;
 
         int mTextWidth;        
 
@@ -240,19 +240,24 @@ public class GameView extends SurfaceView implements Callback {
         }
 
         public void CheckCube() {
-            Log.v(TAG, "CeckCube");
+           // Log.v(TAG, "CeckCube");
 
             for (Cube tmp : mCube) {
 
                 if (tmp.y >= 475 * density && mFigureList.get(0) != mBelowFigureNum) {
                     status = GAMEOVER_PROCESS;
                     gameOverProcessCount = 0;
+                	 
                 } else if (tmp.y >= 475 * density && mFigureList.get(0) == mBelowFigureNum) {
 
                     mScore = mScore + 1;
                     mIsScored = true;
                     mFigureList.remove(0);
                     tmp.isDead = true;
+                    
+                    alphaSpeed = mScore / 10;
+                    
+                    Log.v("alphaSpeed", Integer.toString(alphaSpeed));
                 }
 
             }
@@ -262,8 +267,15 @@ public class GameView extends SurfaceView implements Callback {
 
         public void DrawCube(Canvas canvas) {
             Random random = new Random();
-
-            if (loop == 70) {
+                       
+            int loopSpeed = 95 - alphaSpeed * 2;
+            
+            if (loopSpeed < 55) {
+            	loopSpeed = 55;
+            }
+            
+            if (loop > loopSpeed) {            	
+            	 
                 while (true) {
 
                     mUpFigureNum = random.nextInt(mFigureTotalNum);
@@ -274,10 +286,11 @@ public class GameView extends SurfaceView implements Callback {
                     }
 
                 }
-                mCube.add(new Cube((Width - mFigure[mUpFigureNum].getWidth()) / 2, (int) (90 * density), mUpFigureNum));
+                mCube.add(new Cube((Width - mFigure[mUpFigureNum].getWidth()) / 2, 90 * density, mUpFigureNum));
 
                 mFigureList.add(mUpFigureNum);
                 mFigureIndex++;
+                
                 loop = 0;
             }
 
@@ -291,7 +304,7 @@ public class GameView extends SurfaceView implements Callback {
 
             for (int i = mCube.size() - 1; i >= 0; i--) {
 
-                mCube.get(i).Move();
+                mCube.get(i).Move(alphaSpeed);
 
                 if (mCube.get(i).isDead == true) {
                     mCube.remove(i);
@@ -320,10 +333,12 @@ public class GameView extends SurfaceView implements Callback {
             // <
             if (preColorTime > 0) {
             	prevTouchPaint.setColor(Color.MAGENTA);
+            	prevTouchPaint.setStrokeWidth(6);
             	preColorTime--;
             }
             else {
             	prevTouchPaint.setColor(Color.GRAY);
+            	prevTouchPaint.setStrokeWidth(4);
             }
             canvas.drawLine((int) (60 * density) + 20 , (Height - 350 + 90 * density) / 2 - 100, (int) (60 * density) - 20 , (Height - 350 + 90 * density) / 2, prevTouchPaint);
             canvas.drawLine((int) (60 * density) - 20 , (Height - 350 + 90 * density) / 2, (int) (60 * density) + 20 , (Height - 350 + 90 * density) / 2 + 100, prevTouchPaint);
@@ -331,10 +346,12 @@ public class GameView extends SurfaceView implements Callback {
             // >
             if (nextColorTime > 0) {
             	nextTouchPaint.setColor(Color.MAGENTA);
+            	nextTouchPaint.setStrokeWidth(6);
             	nextColorTime--;
             }
             else {
             	nextTouchPaint.setColor(Color.GRAY);
+            	nextTouchPaint.setStrokeWidth(4);
             }
             
             canvas.drawLine(Width - 60 * density - 20 , (Height - 350 + 90 * density) / 2 - 100, (int) Width - 60 * density + 20 , (Height - 350 + 90 * density) / 2, nextTouchPaint);
@@ -358,10 +375,12 @@ public class GameView extends SurfaceView implements Callback {
 
             if (mIsScored) {
             	bottomCircle.setColor(Color.MAGENTA);
+            	bottomCircle.setStrokeWidth(6);
                 if (circleColorTime > 12) {                    
                     circleColorTime = 0;
                     mIsScored = false;
                     bottomCircle.setColor(Color.GRAY);
+                    bottomCircle.setStrokeWidth(4);
                 }
                 circleColorTime++;
             }
@@ -391,15 +410,18 @@ public class GameView extends SurfaceView implements Callback {
           		gameOverPaint.setColor(Color.BLACK);       	
           		gameOverPaint.setTypeface(Typeface.SANS_SERIF);
           		gameOverPaint.setTextSize(30 * density);
-          		
+          		          		
           		String bestScore = "BEST";            	
-            	canvas.drawText(bestScore, 20 * density, 80 * density, gameOverPaint);            	
+            	canvas.drawText(bestScore, 20 * density, 160 * density, gameOverPaint);            	
           		String score = "SCORE";            	                
-            	canvas.drawText(score, 20 * density, 160 * density, gameOverPaint);
+            	canvas.drawText(score, 20 * density, 220 * density, gameOverPaint);
             	
-            	gameOverPaint.setTextAlign(Align.CENTER);     	
-            	canvas.drawText(Integer.toString(mBestScore), Width - 80 * density, 80 * density, gameOverPaint);
-            	canvas.drawText(Integer.toString(mScore), Width - 80 * density, 160 * density, gameOverPaint);
+            	gameOverPaint.setTextAlign(Align.CENTER);
+            	String gameOver = "GAME OVER";
+          		canvas.drawText(gameOver, Width/2, 80 * density, gameOverPaint);
+          		
+            	canvas.drawText(Integer.toString(mBestScore), Width - 80 * density, 160 * density, gameOverPaint);
+            	canvas.drawText(Integer.toString(mScore), Width - 80 * density, 220 * density, gameOverPaint);
             	
             	//canvas.drawRect(rectGameoverOk, gameOverPaint);
             	canvas.drawText("OK", Width / 2, 330 * density, gameOverPaint);
@@ -454,7 +476,7 @@ public class GameView extends SurfaceView implements Callback {
             Canvas canvas = null;
             while (canRun) {                
                 try {
-					super.sleep(5);
+					super.sleep(8);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -464,7 +486,7 @@ public class GameView extends SurfaceView implements Callback {
                     synchronized (mHolder) {
                         switch (status) {
                             case PROCESS:
-                                Log.v(TAG, "PROCESS");                                
+                                //Log.v(TAG, "PROCESS");                                
                                 MoveAll();
                                 CheckCube();                                
                                 break;

@@ -1,17 +1,18 @@
 package com.lhscdh.cubeproject;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 public class Cube {
 
-	public int x, y;
+	public float x, y;
 	public boolean isDead;	
 	public Bitmap img;
 
 	public int figureNum;
 	int i = 0;
 
-	public Cube(int x, int y, int figureNum) {
+	public Cube(float x, float y, int figureNum) {
 		this.x = x;
 		this.y = y;
 
@@ -27,8 +28,9 @@ public class Cube {
 
 	}
  
-	public void Move() {
-		y = y + (int)(2 * GameView.density);
+	public void Move(int alphaSpeed) {
+		
+		y = y + (2 * GameView.density) + alphaSpeed / 10.f;
 	
 	}
 
