@@ -46,7 +46,7 @@ public class GameView extends SurfaceView implements Callback {
 
     static ArrayList<Cube> mCube;    
 
-    static Bitmap mFigure[];
+    static Bitmap mFigure[];    
 
     static float density;
 
@@ -70,6 +70,8 @@ public class GameView extends SurfaceView implements Callback {
     
     int preColorTime = 0;
     int nextColorTime = 0;
+    
+    static int scoreStatus = 0;
 
     static int mFigureIndex = 0;
 
@@ -105,7 +107,7 @@ public class GameView extends SurfaceView implements Callback {
         mFigure[1] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.love), 80, 80, true);
         mFigure[2] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.triangle), 80, 80, true);        
         mFigure[3] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.diamond), 80, 80, true);
-        mFigure[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pentagon), 80, 80, true);                
+        mFigure[4] = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pentagon), 80, 80, true);        
        
         mFigureList = new ArrayList<Integer>();
         
@@ -126,8 +128,8 @@ public class GameView extends SurfaceView implements Callback {
         rectNext = new Rect((int) (Width - 120 * density), (int) (90 * density), Width, Height - 350);
         
         rectGameoverOk =
-                new Rect((int) (Width / 2 - 50 * density), (int) (300 * density),
-                    (int) (Width / 2 + 50 * density), (int) (300 * density + 100 * density));
+                new Rect((int) (Width / 2 - 50 * density), (int) (420 * density),
+                    (int) (Width / 2 + 50 * density), (int) (420 * density + 100 * density));
             
     }
 
@@ -167,17 +169,26 @@ public class GameView extends SurfaceView implements Callback {
         mThread = new GameThread(mHolder, mContext);       
         mThread.start();
     }
-
-    public static void GameOver() {
-    	mThread.PauseNResume(true);
-    	 
+    
+    public void RecordScore() {
+    	
     	SharedPreferences sharedPref = mContext.getSharedPreferences("PrefName", Context.MODE_PRIVATE);
     	
-    	if(mBestScore < mScore) {
+    	if(mBestScore < mScore || mScore == 300) {
+    		mBestScore = mScore;
     		SharedPreferences.Editor editor = sharedPref.edit();
     		editor.putInt("key_high", mScore);    		
     		editor.commit();
+    		
+    		if (mScore == 300) { scoreStatus = 2; }
+    		else {scoreStatus = 1;}
+    		
     	}        
+    	
+    }
+
+    public static void GameOver() {
+    	mThread.PauseNResume(true);    	
     }
 
     class GameThread extends Thread {
@@ -247,9 +258,21 @@ public class GameView extends SurfaceView implements Callback {
                 if (tmp.y >= 475 * density && mFigureList.get(0) != mBelowFigureNum) {
                     status = GAMEOVER_PROCESS;
                     gameOverProcessCount = 0;
+                	
+//                	mScore = mScore + 1;
+//                    mIsScored = true;
+//                    mFigureList.remove(0);
+//                    tmp.isDead = true;
+//                    
+//                    alphaSpeed = mScore / 10;
+//                    
+//                    if (mScore == 300) {
+//                    	status = GAMEOVER_PROCESS;
+//                        gameOverProcessCount = 0;
+//                    }
                 	 
                 } else if (tmp.y >= 475 * density && mFigureList.get(0) == mBelowFigureNum) {
-
+                	
                     mScore = mScore + 1;
                     mIsScored = true;
                     mFigureList.remove(0);
@@ -257,7 +280,11 @@ public class GameView extends SurfaceView implements Callback {
                     
                     alphaSpeed = mScore / 10;
                     
-                    Log.v("alphaSpeed", Integer.toString(alphaSpeed));
+                    if (mScore == 300) {
+                    	status = GAMEOVER_PROCESS;
+                        gameOverProcessCount = 0;
+                    }
+                    
                 }
 
             }
@@ -268,7 +295,7 @@ public class GameView extends SurfaceView implements Callback {
         public void DrawCube(Canvas canvas) {
             Random random = new Random();
                        
-            int loopSpeed = 95 - alphaSpeed * 2;
+            int loopSpeed = 85 - alphaSpeed * 2;
             
             if (loopSpeed < 55) {
             	loopSpeed = 55;
@@ -376,6 +403,7 @@ public class GameView extends SurfaceView implements Callback {
             if (mIsScored) {
             	bottomCircle.setColor(Color.MAGENTA);
             	bottomCircle.setStrokeWidth(6);
+            	
                 if (circleColorTime > 12) {                    
                     circleColorTime = 0;
                     mIsScored = false;
@@ -407,11 +435,13 @@ public class GameView extends SurfaceView implements Callback {
           	}
          	
           	if (42 < gameOverCount ) {
+          		RecordScore();
+          		
           		gameOverPaint.setColor(Color.BLACK);       	
           		gameOverPaint.setTypeface(Typeface.SANS_SERIF);
           		gameOverPaint.setTextSize(30 * density);
           		          		
-          		String bestScore = "BEST";            	
+          		String bestScore = "BEST";
             	canvas.drawText(bestScore, 20 * density, 160 * density, gameOverPaint);            	
           		String score = "SCORE";            	                
             	canvas.drawText(score, 20 * density, 220 * density, gameOverPaint);
@@ -419,12 +449,28 @@ public class GameView extends SurfaceView implements Callback {
             	gameOverPaint.setTextAlign(Align.CENTER);
             	String gameOver = "GAME OVER";
           		canvas.drawText(gameOver, Width/2, 80 * density, gameOverPaint);
-          		
-            	canvas.drawText(Integer.toString(mBestScore), Width - 80 * density, 160 * density, gameOverPaint);
-            	canvas.drawText(Integer.toString(mScore), Width - 80 * density, 220 * density, gameOverPaint);
+          		          		
+            	canvas.drawText(Integer.toString(mBestScore), Width - 60 * density, 160 * density, gameOverPaint);            	
+            	canvas.drawText(Integer.toString(mScore), Width - 60 * density, 220 * density, gameOverPaint);
             	
             	//canvas.drawRect(rectGameoverOk, gameOverPaint);
-            	canvas.drawText("OK", Width / 2, 330 * density, gameOverPaint);
+            	canvas.drawText("OK", Width / 2, 450 * density, gameOverPaint);
+            	
+            	if(scoreStatus == 1) {
+            		gameOverPaint.setColor(Color.rgb(23, 108, 237));
+            		canvas.drawText("NEW RECORD", Width / 2, 330 * density, gameOverPaint);
+            	}
+            	else if(scoreStatus == 2) {
+            		Rect perfect = new Rect((int) (Width / 2 - 80 * density), (int) (300 * density),
+                            (int) (Width / 2 + 80 * density), (int) (300 * density + 40 * density));
+            		
+            		gameOverPaint.setColor(Color.rgb(245, 037, 037));
+            		canvas.drawRect(perfect, gameOverPaint);
+            		
+            		gameOverPaint.setColor(Color.YELLOW);
+            		canvas.drawText("PERFECT", Width / 2, 330 * density, gameOverPaint);
+            	}
+            	
             	
          		GameOver();
          		gameOverCount = 0;             		
@@ -485,18 +531,15 @@ public class GameView extends SurfaceView implements Callback {
                 try {
                     synchronized (mHolder) {
                         switch (status) {
-                            case PROCESS:
-                                //Log.v(TAG, "PROCESS");                                
+                            case PROCESS:                                                                
                                 MoveAll();
                                 CheckCube();                                
                                 break;
-                            case GAMEOVER_PROCESS:
-                            	Log.v(TAG, "GAMEOVER_PROCESS");                            	
+                            case GAMEOVER_PROCESS:                            	                            	
                                 break;
                             case ALL_CLEAR:
                                 break;
-                            case GAMEOVER:            
-                            	Log.v(TAG, "GAMEOVER");                            	
+                            case GAMEOVER:                            	                            	
                                 break;
                                 }
                         
