@@ -480,6 +480,7 @@ containing a value of this type.
         public static final int smile=0x7f02002e;
         public static final int square=0x7f02002f;
         public static final int triangle=0x7f020030;
+        public static final int water_001=0x7f020031;
     }
     public static final class id {
         public static final int adjust_height=0x7f070001;

@@ -112,6 +112,7 @@ int drawable powered_by_google_light 0x7f02002d
 int drawable smile 0x7f02002e
 int drawable square 0x7f02002f
 int drawable triangle 0x7f020030
+int drawable water_001 0x7f020031
 int id adjust_height 0x7f070001
 int id adjust_width 0x7f070002
 int id book_now 0x7f070012

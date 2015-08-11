@@ -30,7 +30,7 @@ public class Cube {
  
 	public void Move(int alphaSpeed) {
 		
-		y = y + (2.0f * GameView.density) + alphaSpeed / 11.f;
+		y = y + (2.0f * GameView.density) + (float)alphaSpeed * 0.2f;
 	
 	}
 
