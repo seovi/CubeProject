@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 
 public class StartActivity extends Activity {
 		
-	ImageButton mStartBtn;	
+	Button mStartBtn;	
 	static StartScoreView mStartCoreView;
 	
     @Override
@@ -27,7 +27,7 @@ public class StartActivity extends Activity {
         
         adView.loadAd(adRequest);        
         
-        mStartBtn = (ImageButton) findViewById(R.id.view_ids_start);
+        mStartBtn = (Button) findViewById(R.id.view_ids_start);
         mStartBtn.setOnClickListener(mViewClickListener);
           
     }

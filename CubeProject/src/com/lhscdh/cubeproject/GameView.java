@@ -264,7 +264,7 @@ public class GameView extends SurfaceView implements Callback {
         	backGroundFillPaint.setColor(Color.WHITE);     
         	        	
         	scorePaint.setColor(Color.BLACK);       	
-        	scorePaint.setTypeface(Typeface.SANS_SERIF);
+        	scorePaint.setTypeface(Typeface.MONOSPACE);
         	scorePaint.setAntiAlias(true);
         	
         	bottomCircle = new Paint();
@@ -469,7 +469,7 @@ public class GameView extends SurfaceView implements Callback {
           		RecordScore();
           		
           		gameOverPaint.setColor(Color.BLACK);       	
-          		gameOverPaint.setTypeface(Typeface.SANS_SERIF);
+          		gameOverPaint.setTypeface(Typeface.MONOSPACE);
           		gameOverPaint.setTextSize(30 * density);
           		          		
           		String bestScore = "BEST";

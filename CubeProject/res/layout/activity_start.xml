@@ -14,27 +14,30 @@
         ads:adSize="BANNER"
         ads:adUnitId="pub-5977092817596044" />
     
-    <com.lhscdh.cubeproject.StartScoreView
-        android:id="@+id/view_ids_startview"
-         android:layout_width="fill_parent"
-         android:layout_height="60dp" />       
-      
     <ImageView
         android:contentDescription="@string/start"
         android:id="@+id/main_image"
         android:layout_width="match_parent"        
         android:layout_height="250dp"
         android:src="@drawable/main" />
+    
+    <com.lhscdh.cubeproject.StartScoreView
+        android:id="@+id/view_ids_startview"
+         android:layout_width="fill_parent"
+         android:layout_height="60dp" />       
+      
 
-    <ImageButton
-        android:contentDescription="@string/start"
+
+    <Button
         android:id="@+id/view_ids_start"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
-        android:layout_gravity="center"  
-        android:background="#ffffffff"      
-        android:src="@drawable/play" />
-
-  
+        android:layout_gravity="center"
+        android:background="#ffffffff"
+        android:contentDescription="@string/start"
+        android:text="@string/start"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:typeface="monospace" />
 
 </LinearLayout>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Cube Hole</string>
+    <string name="app_name">Holar</string>
     <string name="hello_world">Hello world!</string>
-    <string name="start">Start</string>
+    <string name="start">START</string>
     <string name="score">Score</string>        
 
 </resources>
