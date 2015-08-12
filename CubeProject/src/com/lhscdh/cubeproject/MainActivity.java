@@ -34,16 +34,13 @@ public class MainActivity extends Activity {
 		}
 	};
 
-	// @Override
-	// public void onDestroy() {
-	// super.onDestroy();
-	// GameView.PauseGame();
-	// finish();
-	// // if(GameView.status == GameView.PROCESS) {
-	// // GameView.status = GameView.GAMEOVER;
-	// // }
-	// }
-	//
+	 @Override
+	 public void onDestroy() {
+		 super.onDestroy();
+		 GameView.GameOver();
+		System.exit(0);	 
+	 }
+	
 
 	@Override
 	public void onBackPressed() {
@@ -74,6 +71,9 @@ public class MainActivity extends Activity {
 
 	public void onPause() {
 		super.onPause();
+		
+		 GameView.GameOver();
+		 System.exit(0);	 
 
 		unregisterReceiver(mBRGameOver);
 	}
