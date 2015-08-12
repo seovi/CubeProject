@@ -2,8 +2,6 @@ package com.lhscdh.cubeproject;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.Intent;
@@ -81,6 +79,12 @@ public class GameView extends SurfaceView implements Callback {
     static int Width, Height; // View
 
     static int status = PROCESS;
+    
+    AudioClip sbBlop;
+    AudioClip sbTick1;
+    AudioClip sbTick2;
+    AudioClip sbTick3;
+    AudioClip sbFizzle;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -141,6 +145,12 @@ public class GameView extends SurfaceView implements Callback {
         
         SharedPreferences sharedPref = mContext.getSharedPreferences("PrefName", Context.MODE_PRIVATE);       
         mBestScore = sharedPref.getInt("key_high", 0);
+        
+        sbBlop = new AudioClip(mContext, R.raw.sb_blop);
+        sbTick1 = new AudioClip(mContext, R.raw.sb_tick);
+        sbTick2 = new AudioClip(mContext, R.raw.sb_tick);
+        sbTick3 = new AudioClip(mContext, R.raw.sb_tick);
+        sbFizzle = new AudioClip(mContext, R.raw.sb_fizzle);
 
     }
 
@@ -286,23 +296,14 @@ public class GameView extends SurfaceView implements Callback {
                 if (tmp.y >= 475 * density && mFigureList.get(0) != mBelowFigureNum) {
                     status = GAMEOVER_PROCESS;
                     gameOverProcessCount = 0;
-                	
-//                	mScore = mScore + 1;
-//                    mIsScored = true;
-//                    mFigureList.remove(0);
-//                    tmp.isDead = true;
-//                    
-//                    alphaSpeed = mScore / 10;
-//                    
-//                    if (mScore == 300) {
-//                    	status = GAMEOVER_PROCESS;
-//                        gameOverProcessCount = 0;
-//                    }
+                    
+                    sbFizzle.play();
                 	 
                 } else if (tmp.y >= 475 * density && mFigureList.get(0) == mBelowFigureNum) {
                 	
                     mScore = mScore + 1;
                     mIsScored = true;
+                    sbBlop.play();
                     mFigureList.remove(0);
                     tmp.isDead = true;
                     
@@ -553,7 +554,7 @@ public class GameView extends SurfaceView implements Callback {
             Canvas canvas = null;
             while (canRun) {                
                 try {
-					super.sleep(8);
+					super.sleep(2);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -625,7 +626,16 @@ public class GameView extends SurfaceView implements Callback {
     	 
     	 
         if (rectPrev.contains(x, y)) {
-        
+        	       
+        	if (sbTick1.isPlayng()) {
+        		sbTick2.play();  
+        	}
+        	else if (sbTick2.isPlayng()){
+        		sbTick3.play();
+        	}else{
+        		sbTick1.play();
+        	}
+        	
         	preColorTime = 12;
         	
         if (mBelowFigureNum == mFigureTotalNum - 1)
@@ -646,6 +656,15 @@ public class GameView extends SurfaceView implements Callback {
         }
         
         if (rectNext.contains(x, y)) {
+        	
+        	if (sbTick1.isPlayng()) {
+        		sbTick2.play();  
+        	}
+        	else if (sbTick2.isPlayng()){
+        		sbTick3.play();
+        	}else{
+        		sbTick1.play();
+        	}
         	
         	nextColorTime = 12;
         	

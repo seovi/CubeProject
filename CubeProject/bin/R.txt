@@ -148,6 +148,9 @@ int integer google_play_services_version 0x7f090000
 int layout activity_main 0x7f030000
 int layout activity_start 0x7f030001
 int raw gtm_analytics 0x7f040000
+int raw sb_blop 0x7f040001
+int raw sb_fizzle 0x7f040002
+int raw sb_tick 0x7f040003
 int string accept 0x7f060002
 int string app_name 0x7f06002c
 int string auth_google_play_services_client_facebook_display_name 0x7f060007

@@ -524,6 +524,9 @@ containing a value of this type.
     }
     public static final class raw {
         public static final int gtm_analytics=0x7f040000;
+        public static final int sb_blop=0x7f040001;
+        public static final int sb_fizzle=0x7f040002;
+        public static final int sb_tick=0x7f040003;
     }
     public static final class string {
         public static final int accept=0x7f060002;
