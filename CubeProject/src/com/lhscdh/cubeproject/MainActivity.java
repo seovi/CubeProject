@@ -10,76 +10,78 @@ import android.view.View;
 
 public class MainActivity extends Activity {
 
-	static GameView mGameView;
+    static GameView mGameView;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-		mGameView = (GameView) findViewById(R.id.view_ids_gameview);
-	}
+        mGameView = (GameView) findViewById(R.id.view_ids_gameview);
+    }
 
-	protected void performAction(View view, int actionId) {
-		if (actionId == R.id.view_ids_start) {
+    protected void performAction(View view, int actionId) {
+        if (actionId == R.id.view_ids_start) {
 
-		}
-	}
+        }
+    }
 
-	protected View.OnClickListener mViewClickListener = new View.OnClickListener() {
+    protected View.OnClickListener mViewClickListener = new View.OnClickListener() {
 
-		@Override
-		public void onClick(View v) {
-			performAction(v, v.getId());
-		}
-	};
+        @Override
+        public void onClick(View v) {
+            performAction(v, v.getId());
+        }
+    };
 
-	 @Override
-	 public void onDestroy() {
-		 super.onDestroy();
-		 GameView.GameOver();
-		System.exit(0);	 
-	 }
-	
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (GameView.status == GameView.PROCESS)
+            GameView.status = GameView.BACK;
+        // GameView.GameOver();
+        finish();
+        //System.exit(0);	 
+    }
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (GameView.status == GameView.PROCESS)
+            GameView.status = GameView.BACK;
+        finish();
+        //System.exit(0);
+        //finish();
 
-		GameView.GameOver();
-		System.exit(0);
-		//finish();
+    }
 
-	}
+    BroadcastReceiver mBRGameOver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //			GameView.PauseGame();
+//            if (GameView.status == GameView.PROCESS)
+//                GameView.status = GameView.BACK;
+            finish();
+            //System.exit(0);
+        }
+    };
 
-	BroadcastReceiver mBRGameOver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-//			GameView.PauseGame();
-//			finish();
-			System.exit(0);
-		}
-	};
+    public void onResume() {
+        super.onResume();
 
-	public void onResume() {
-		super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("GAMEOVER");
+        registerReceiver(mBRGameOver, filter);
+    }
 
-		IntentFilter filter = new IntentFilter();
-		filter.addAction("GAMEOVER");
-		registerReceiver(mBRGameOver, filter);
-	}
+    public void onPause() {
+        super.onPause();
 
-	public void onPause() {
-		super.onPause();
-		
-		 GameView.GameOver();
-		 System.exit(0);	 
-
-		unregisterReceiver(mBRGameOver);
-	}
-	// public static void GameOver() {
-	// GameView.PauseGame();
-	// finish();
-	// }
+        unregisterReceiver(mBRGameOver);
+    }
+    // public static void GameOver() {
+    // GameView.PauseGame();
+    // finish();
+    // }
 
 }
