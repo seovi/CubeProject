@@ -36,7 +36,7 @@ public class GameView extends SurfaceView implements Callback {
 
     final static int ALL_CLEAR = 4; // All Clear    
 
-    final static int BACK = 5;
+   // final static int BACK = 5;
 
     static GameThread mThread; // GameThread
 
@@ -490,7 +490,7 @@ public class GameView extends SurfaceView implements Callback {
                 bottomCircle.setColor(Color.MAGENTA);
                 bottomCircle.setStrokeWidth(6);
 
-                canvas.drawBitmap(mWater[circleColorTime], (Width - mWater[0].getWidth()) / 2, Height - 180, null);
+                canvas.drawBitmap(mWater[circleColorTime], (Width - mWater[0].getWidth()) / 2,  (Height - 220*density), null);
 
                 if (circleColorTime > 18) {
                     circleColorTime = 0;
@@ -501,7 +501,7 @@ public class GameView extends SurfaceView implements Callback {
                 circleColorTime++;
             }
 
-            canvas.drawCircle(Width / 2, (Height - 290) + mFigure[mBelowFigureNum].getWidth() / 2, (30 * density),
+            canvas.drawCircle(Width / 2, (Height - 300) + mFigure[mBelowFigureNum].getHeight() / 2, (30 * density),
                 bottomCircle);
 
         }
@@ -628,9 +628,9 @@ public class GameView extends SurfaceView implements Callback {
                                 break;
                             case GAMEOVER:
                                 break;
-                            case BACK:
-                                PauseGame();
-                                break;
+//                            case BACK:
+//                                PauseGame();
+//                                break;
                         }
 
                         DrawAll(canvas);

@@ -37,22 +37,15 @@ public class MainActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (GameView.status == GameView.PROCESS)
-            GameView.status = GameView.BACK;
-        // GameView.GameOver();
         finish();
-        //System.exit(0);	 
+        System.exit(0);	 
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (GameView.status == GameView.PROCESS)
-            GameView.status = GameView.BACK;
-        finish();
-        //System.exit(0);
-        //finish();
 
+        System.exit(0);
     }
 
     BroadcastReceiver mBRGameOver = new BroadcastReceiver() {
@@ -61,8 +54,8 @@ public class MainActivity extends Activity {
             //			GameView.PauseGame();
 //            if (GameView.status == GameView.PROCESS)
 //                GameView.status = GameView.BACK;
-            finish();
-            //System.exit(0);
+
+            System.exit(0);
         }
     };
 
