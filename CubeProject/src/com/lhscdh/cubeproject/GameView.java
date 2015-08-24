@@ -320,14 +320,18 @@ public class GameView extends SurfaceView implements Callback {
 
             backGroudnLinePaint.setColor(Color.GRAY);
             backGroudnLinePaint.setStrokeWidth(4.0f);
+            backGroudnLinePaint.setAntiAlias(true);
 
             prevTouchPaint.setColor(Color.GRAY);
             prevTouchPaint.setStrokeWidth(4.0f);
+            prevTouchPaint.setAntiAlias(true);
 
             nextTouchPaint.setColor(Color.GRAY);
             nextTouchPaint.setStrokeWidth(4.0f);
+            nextTouchPaint.setAntiAlias(true);
 
             backGroundFillPaint.setColor(Color.WHITE);
+            backGroundFillPaint.setAntiAlias(true);
 
             scorePaint.setColor(Color.BLACK);
             scorePaint.setTypeface(Typeface.MONOSPACE);
