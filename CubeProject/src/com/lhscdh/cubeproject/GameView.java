@@ -36,7 +36,7 @@ public class GameView extends SurfaceView implements Callback {
 
     final static int ALL_CLEAR = 4; // All Clear    
 
-   // final static int BACK = 5;
+    // final static int BACK = 5;
 
     static GameThread mThread; // GameThread
 
@@ -121,60 +121,85 @@ public class GameView extends SurfaceView implements Callback {
         mCube = new ArrayList<Cube>();
         mFigure = new Bitmap[mFigureTotalNum];
         mFigure[0] =
-            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.circle), 80, 80, true);
+            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.circle),
+                (int) (40 * density), (int) (40 * density), true);
         mFigure[1] =
-            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.love), 80, 80, true);
+            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.love),
+                (int) (40 * density), (int) (40 * density), true);
         mFigure[2] =
-            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.triangle), 80, 80, true);
+            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.triangle),
+                (int) (40 * density), (int) (40 * density), true);
         mFigure[3] =
-            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.diamond), 80, 80, true);
+            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.diamond),
+                (int) (40 * density), (int) (40 * density), true);
         mFigure[4] =
-            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pentagon), 80, 80, true);
+            Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.pentagon),
+                (int) (40 * density), (int) (40 * density), true);
 
         mWater = new Bitmap[20];
         mWater[0] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 0, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 0, 0,
+                (int) (64 * density), (int) (64 * density));
         mWater[1] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 0, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 0, 0,
+                (int) (64 * density), (int) (64 * density));
         mWater[2] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 128, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (64 * density), 0, (int) (64 * density), (int) (64 * density));
         mWater[3] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 128, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (64 * density), 0, (int) (64 * density), (int) (64 * density));
         mWater[4] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 256, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (128 * density), 0, (int) (64 * density), (int) (64 * density));
         mWater[5] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 256, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (128 * density), 0, (int) (64 * density), (int) (64 * density));
         mWater[6] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 384, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (192 * density), 0, (int) (64 * density), (int) (64 * density));
         mWater[7] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 384, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (192 * density), 0, (int) (64 * density), (int) (64 * density));
         mWater[8] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 512, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (256 * density), 0, (int) (64 * density), (int) (64 * density));
         mWater[9] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 512, 0, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (256 * density), 0, (int) (64 * density), (int) (64 * density));
         mWater[10] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 0, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 0,
+                (int) (64 * density), (int) (64 * density), (int) (64 * density));
         mWater[11] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 0, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 0,
+                (int) (64 * density), (int) (64 * density), (int) (64 * density));
         mWater[12] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 128, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (64 * density), (int) (64 * density), (int) (64 * density), (int) (64 * density));
         mWater[13] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 128, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (64 * density), (int) (64 * density), (int) (64 * density), (int) (64 * density));
         mWater[14] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 256, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (128 * density), (int) (64 * density), (int) (64 * density), (int) (64 * density));
         mWater[15] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 256, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (128 * density), (int) (64 * density), (int) (64 * density), (int) (64 * density));
         mWater[16] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 384, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (192 * density), (int) (64 * density), (int) (64 * density), (int) (64 * density));
         mWater[17] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 384, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (192 * density), (int) (64 * density), (int) (64 * density), (int) (64 * density));
         mWater[18] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 512, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (256 * density), (int) (64 * density), (int) (64 * density), (int) (64 * density));
         mWater[19] =
-            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001), 512, 128, 128, 128);
+            Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.water_001),
+                (int) (256 * density), (int) (64 * density), (int) (64 * density), (int) (64 * density));
 
         for (int i = 0; i < 20; i++) {
-            mWater[i] = Bitmap.createScaledBitmap(mWater[i], 384, 384, true);
+            mWater[i] = Bitmap.createScaledBitmap(mWater[i], (int) (172 * density), (int) (172 * density), true);
         }
 
         mFigureList = new ArrayList<Integer>();
@@ -434,19 +459,20 @@ public class GameView extends SurfaceView implements Callback {
             canvas.drawRect(0, 0, Width, Height, backGroundFillPaint);
 
             //DrawBackGroundLine
-            canvas.drawLine(0, 90 * density, Width, 90 * density, backGroudnLinePaint);
+            canvas.drawLine(0, 90 * density, Width, 90 * density, backGroudnLinePaint); // 가로 첫째줄
 
-            canvas.drawLine((int) (120 * density), (int) (90 * density), (int) (120 * density), Height - 350,
+            canvas.drawLine((int) (120 * density), (int) (90 * density), (int) (120 * density), Height - 130 * density,
                 backGroudnLinePaint);
 
-            canvas.drawLine(Width - 120 * density, (int) (90 * density), Width - 120 * density, Height - 350,
+            canvas.drawLine(Width - 120 * density, (int) (90 * density), Width - 120 * density, Height - 130 * density,
                 backGroudnLinePaint);
 
-            canvas.drawLine(0, Height - 350, 120 * density, Height - 350, backGroudnLinePaint);
+            canvas.drawLine(0, Height - 130 * density, 120 * density, Height - 130 * density, backGroudnLinePaint);
 
-            canvas.drawLine(Width - 120 * density, Height - 350, Width, Height - 350, backGroudnLinePaint);
+            canvas.drawLine(Width - 120 * density, Height - 130 * density, Width, Height - 130 * density,
+                backGroudnLinePaint);
 
-            canvas.drawLine(0, Height - 150, Width, Height - 150, backGroudnLinePaint);
+            canvas.drawLine(0, Height - 50 * density, Width, Height - 50 * density, backGroudnLinePaint); // 가로 셋째줄
 
             // <
             if (preColorTime > 0) {
@@ -480,21 +506,19 @@ public class GameView extends SurfaceView implements Callback {
         }
 
         public void DrawScore(Canvas canvas) {
-
             scorePaint.setTextSize(50 * density);
             mTextWidth = (int) Math.ceil(scorePaint.measureText(Integer.toString(mScore)));
 
             canvas.drawText(Integer.toString(mScore), (Width - mTextWidth) / 2, 60 * density, scorePaint);
-
         }
 
         public void DrawBottomCircle(Canvas canvas) {
-
             if (mIsScored) {
                 bottomCircle.setColor(Color.MAGENTA);
                 bottomCircle.setStrokeWidth(6);
 
-                canvas.drawBitmap(mWater[circleColorTime], (Width - mWater[0].getWidth()) / 2,  (Height - 220*density), null);
+                canvas.drawBitmap(mWater[circleColorTime], (Width - mWater[0].getWidth()) / 2,
+                    (Height - 180 * density), null);
 
                 if (circleColorTime > 18) {
                     circleColorTime = 0;
@@ -505,19 +529,20 @@ public class GameView extends SurfaceView implements Callback {
                 circleColorTime++;
             }
 
-            canvas.drawCircle(Width / 2, (Height - 300) + mFigure[mBelowFigureNum].getHeight() / 2, (30 * density),
-                bottomCircle);
+            canvas.drawCircle(Width / 2, (Height - 110 * density) + mFigure[mBelowFigureNum].getHeight() / 2,
+                (30 * density), bottomCircle);
 
         }
 
         public void DrawBottomFigure(Canvas canvas) {
 
-            canvas.drawBitmap(mFigure[mBelowFigureLeftNum], 50, Height - 300, null);
+            canvas.drawBitmap(mFigure[mBelowFigureLeftNum], 60 * density
+                - (mFigure[mBelowFigureLeftNum].getWidth() / 2), (Height - 110 * density), null);
 
             canvas.drawBitmap(mFigure[mBelowFigureNum], (Width - mFigure[mBelowFigureNum].getWidth()) / 2,
-                Height - 300, null);
+                (Height - 110 * density), null);
 
-            canvas.drawBitmap(mFigure[mBelowFigureRightNum], Width - 150, Height - 300, null);
+            canvas.drawBitmap(mFigure[mBelowFigureRightNum], Width - 80 * density, (Height - 110 * density), null);
         }
 
         public void DrawGameOver(Canvas canvas) {
@@ -632,9 +657,9 @@ public class GameView extends SurfaceView implements Callback {
                                 break;
                             case GAMEOVER:
                                 break;
-//                            case BACK:
-//                                PauseGame();
-//                                break;
+                        //                            case BACK:
+                        //                                PauseGame();
+                        //                                break;
                         }
 
                         DrawAll(canvas);
@@ -672,8 +697,9 @@ public class GameView extends SurfaceView implements Callback {
     } // GameThread 占쏙옙
 
     public void gameover() {
-      
+
     }
+
     public boolean TouchEvent(int x, int y) {
 
         if (status == GAMEOVER_PROCESS)
@@ -681,7 +707,7 @@ public class GameView extends SurfaceView implements Callback {
 
         if (status == GAMEOVER) {
             if (rectGameoverOk.contains(x, y)) {
-               
+
                 Intent intent = new Intent();
                 intent.setAction("GAMEOVER");
                 mContext.sendBroadcast(intent);
