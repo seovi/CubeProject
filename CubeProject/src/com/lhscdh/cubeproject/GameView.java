@@ -409,10 +409,10 @@ public class GameView extends SurfaceView implements Callback {
         public void DrawCube(Canvas canvas) {
             Random random = new Random();
 
-            int loopSpeed = 85 - alphaSpeed * 3;
+            int loopSpeed = 65 - alphaSpeed * 2;
 
-            if (loopSpeed < 55) {
-                loopSpeed = 55;
+            if (loopSpeed < 45) {
+                loopSpeed = 45;
             }
 
             if (loop > loopSpeed) {
@@ -638,7 +638,7 @@ public class GameView extends SurfaceView implements Callback {
             Canvas canvas = null;
             while (canRun) {
                 try {
-                    super.sleep(2);
+                    super.sleep(1);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
