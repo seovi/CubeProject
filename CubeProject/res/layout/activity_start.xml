@@ -12,7 +12,7 @@
         android:layout_width="fill_parent"
         android:layout_height="100dp"
         ads:adSize="BANNER"
-        ads:adUnitId="pub-5977092817596044" />
+        ads:adUnitId="ca-app-pub-1650071219370599/3735090866" />
     
     <ImageView
         android:contentDescription="@string/start"
