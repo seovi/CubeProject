@@ -84,7 +84,7 @@ public class GameView extends SurfaceView implements Callback {
 
     static ArrayList<Integer> mFigureList;
 
-    static int Width, Height; // View
+    static float Width, Height; // View
 
     static int status = PROCESS;
 
@@ -225,9 +225,9 @@ public class GameView extends SurfaceView implements Callback {
     // canvas.drawBitmap(mPause, Width - 100 * density, 10 * density, null);
     public void InitTouchCor() { // init touch coordinate
 
-        rectPrev = new Rect(0, (int) (90 * density), (int) (120 * density), Height - 350);
+        rectPrev = new Rect(0, (int) (90 * density), (int) (120 * density), (int)(Height - 350));
 
-        rectNext = new Rect((int) (Width - 120 * density), (int) (90 * density), Width, Height - 350);
+        rectNext = new Rect((int) (Width - 120 * density), (int) (90 * density),  (int)Width, (int)Height - 350);
 
         rectGameoverOk =
             new Rect((int) (Width / 2 - 50 * density), (int) (420 * density), (int) (Width / 2 + 50 * density),
@@ -238,7 +238,7 @@ public class GameView extends SurfaceView implements Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-            mThread.start();
+            mThread.start();            
         } catch (Exception e) {
             ResumeGame();
         }
@@ -378,13 +378,13 @@ public class GameView extends SurfaceView implements Callback {
 
             for (Cube tmp : mCube) {
 
-                if (tmp.y >= Height - 290 && mFigureList.get(0) != mBelowFigureNum) {
+                if (tmp.y >= Height - 130 * density && mFigureList.get(0) != mBelowFigureNum) {
                     status = GAMEOVER_PROCESS;
                     gameOverProcessCount = 0;
 
                     sbFizzle.play();
 
-                } else if (tmp.y >= Height - 290 && mFigureList.get(0) == mBelowFigureNum) {
+                } else if (tmp.y >= Height - 130 * density && mFigureList.get(0) == mBelowFigureNum) {
 
                     mScore = mScore + 1;
                     mIsScored = true;
@@ -548,7 +548,7 @@ public class GameView extends SurfaceView implements Callback {
         public void DrawGameOver(Canvas canvas) {
 
             if (gameOverCount < 41) {
-                int size = Height / 40 * gameOverCount;
+                float size = Height / 40 * gameOverCount;
                 canvas.drawRect(0, 0, Width, size, gameOverPaint);
             }
 
