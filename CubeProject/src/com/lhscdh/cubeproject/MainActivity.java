@@ -71,6 +71,7 @@ public class MainActivity extends Activity {
         super.onPause();
 
         unregisterReceiver(mBRGameOver);
+        System.exit(0);
     }
     // public static void GameOver() {
     // GameView.PauseGame();

@@ -510,6 +510,7 @@ containing a value of this type.
         public static final int terrain=0x7f070007;
         public static final int test=0x7f07000d;
         public static final int view_ids_adview=0x7f07001b;
+        public static final int view_ids_copyright=0x7f07001f;
         public static final int view_ids_gameview=0x7f07001a;
         public static final int view_ids_start=0x7f07001e;
         public static final int view_ids_startview=0x7f07001d;
@@ -658,6 +659,7 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f060026;
+        public static final int copy_rights=0x7f060030;
         public static final int create_calendar_message=0x7f060005;
         public static final int create_calendar_title=0x7f060004;
         public static final int decline=0x7f060003;

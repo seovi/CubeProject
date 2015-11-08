@@ -4,6 +4,7 @@
     <string name="app_name">Holar</string>
     <string name="hello_world">Hello world!</string>
     <string name="start">START</string>
-    <string name="score">Score</string>        
+    <string name="score">Score</string>
+    <string name="copy_rights">ⓒ2015 Hyosub Lee. All Rights Reserved.</string>         
 
 </resources>

@@ -24,19 +24,32 @@
     <com.lhscdh.cubeproject.StartScoreView
         android:id="@+id/view_ids_startview"
          android:layout_width="fill_parent"
-         android:layout_height="60dp" />       
-      
-
+         android:layout_height="60dp" /> 
 
     <Button
         android:id="@+id/view_ids_start"
         android:layout_width="fill_parent"
-        android:layout_height="150dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
         android:background="#ffffffff"
         android:contentDescription="@string/start"
-        android:text="@string/start"
+        android:text=""
         android:textSize="25sp"
+        android:textStyle="bold"
+        android:typeface="monospace"      
+        android:enabled="false"  
+        />
+    
+    <TextView
+        android:id="@+id/view_ids_copyright"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:layout_gravity="center|bottom"
+        android:background="#ffffffff"
+        android:gravity="center|center_horizontal"
+        android:text="@string/copy_rights"
+        android:textColor="#FFA2A2A2"
+        android:textSize="12sp"
         android:textStyle="bold"
         android:typeface="monospace" />
 
